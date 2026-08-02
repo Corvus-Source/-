@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스트리머 - 나무위키</title>
+    <style>
+        :root {
+            --namu-green: #008275;
+            --namu-light-green: #00a495;
+            --namu-bg: #f5f6f7;
+            --namu-card-bg: #ffffff;
+            --namu-text: #373a3c;
+            --namu-border: #ccc;
+            --namu-table-head: #008275;
+            --namu-table-head-text: #ffffff;
+            --namu-th-bg: #f0f4f4;
+            --namu-th-border: #eee;
+            --namu-toc-bg: #f9f9f9;
+            --namu-navbar-bg: #008275;
+            --namu-navbar-text: #ffffff;
+            --namu-subtext: #888888;
+        }
+
+        /* 다크 모드 스타일 변수 */
+        body.dark-mode {
+            --namu-bg: #121212;
+            --namu-card-bg: #1e1e1e;
+            --namu-text: #e0e0e0;
+            --namu-border: #333333;
+            --namu-th-bg: #2a2a2a;
+            --namu-th-border: #333333;
+            --namu-toc-bg: #252525;
+            --namu-navbar-bg: #004d40;
+            --namu-subtext: #aaa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--namu-bg);
+            color: var(--namu-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 나무위키 스타일 상단바 */
+        .navbar {
+            background-color: var(--namu-navbar-bg);
+            color: var(--namu-navbar-text);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: var(--namu-card-bg);
+            border: 1px solid var(--namu-border);
+            border-radius: 4px;
+            padding: 30px;
+        }
+
+        /* 문서 제목 */
+        .doc-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            border-bottom: 2px solid var(--namu-green);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-title .category {
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: var(--namu-subtext);
+        }
+
+        /* 프로필 프로필 박스(프로필 인포복스) */
+        .infobox {
+            float: right;
+            width: 320px;
+            border: 2px solid var(--namu-green);
+            border-radius: 4px;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            background: var(--namu-card-bg);
+            font-size: 0.9rem;
+        }
+
+        .infobox-header {
+            background-color: var(--namu-green);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.2rem;
+        }
+
+        .infobox-image {
+            width: 100%;
+            height: 250px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            border-bottom: 1px solid var(--namu-border);
+            overflow: hidden;
+        }
+
+        .infobox-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .infobox table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .infobox th {
+            background-color: var(--namu-th-bg);
+            width: 35%;
+            padding: 6px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--namu-th-border);
+            border-right: 1px solid var(--namu-th-border);
+            color: var(--namu-text);
+        }
+
+        .infobox td {
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--namu-th-border);
+            color: var(--namu-text);
+        }
+
+        /* 목차 */
+        .toc {
+            background: var(--namu-toc-bg);
+            border: 1px solid var(--namu-border);
+            display: inline-block;
+            padding: 15px 25px 15px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .toc-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-toggle-btn {
+            font-size: 0.8rem;
+            color: var(--namu-green);
+            cursor: pointer;
+            user-select: none;
+            font-weight: normal;
+        }
+
+        .toc-toggle-btn:hover {
+            text-decoration: underline;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 10px;
+            margin: 0;
+        }
+
+        .toc li {
+            margin: 4px 0;
+        }
+
+        .toc a {
+            color: var(--namu-green);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* 본문 스타일 */
+        h2 {
+            font-size: 1.5rem;
+            color: var(--namu-green);
+            border-bottom: 1px solid var(--namu-border);
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        a.wiki-link {
+            color: var(--namu-green);
+            text-decoration: none;
+        }
+
+        a.wiki-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 각주 스타일 */
+        .footnote {
+            font-size: 0.8rem;
+            color: var(--namu-green);
+            vertical-align: super;
+            cursor: pointer;
+        }
+
+        /* 취소선 스타일 */
+        .strike {
+            text-decoration: line-through;
+            color: var(--namu-subtext);
+        }
+
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<nav class="navbar">
+    <a href="#" class="navbar-brand">
+        <span>이결위키</span>
+    </a>
+    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 다크 모드</button>
+</nav>
+
+<div class="container">
+    <!-- 문서 제목 -->
+    <div class="doc-title">
+        <span>윤이결</span>
+        <span class="category">분류: SOOP 스트리머</span>
+    </div>
+
+    <!-- 인포복스 (오른쪽 프로필 상자) -->
+    <div class="infobox">
+        <div class="infobox-header">스트리머 프로필</div>
+        <div class="infobox-image">
+            <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지">
+        </div>
+        <table>
+            <tr>
+                <th>이름</th>
+                <td>윤이결</td>
+            </tr>
+            <tr>
+                <th>종족</th>
+                <td>경계인</td>
+            </tr>
+            <tr>
+                <th>플랫폼</th>
+                <td><a href="https://www.sooplive.com/station/khaea218" target="_blank" class="wiki-link">SOOP 방송국</a></td>
+            </tr>
+            <tr>
+                <th>생년월일</th>
+                <td>2월 18일</td>
+            </tr>
+            <tr>
+                <th>첫 방송일</th>
+                <td>2026년 3월 16일 <span id="firstBroadcastDays"></span></td>
+            </tr>
+            <tr>
+                <th>주요 콘텐츠</th>
+                <td>배틀그라운드, 마인크래프트, 추리게임</td>
+            </tr>
+            <tr>
+                <th>팬덤명</th>
+                <td>먼지단</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 개요 및 목차 -->
+    <p>
+        <a href="https://www.sooplive.com" class="wiki-link">SOOP</a>에서 활동하는 대한민국 스트리머. <span class="strike">주로 수다를 떨거나 억까를 당하는 것이 콘텐츠다.</span>
+    </p>
+
+    <div class="toc">
+        <div class="toc-title">
+            <span>[목차]</span>
+            <span class="toc-toggle-btn" id="tocToggleBtn" onclick="toggleToc()">[접기]</span>
+        </div>
+        <ul id="tocContent">
+            <li>1. <a href="#s-1">개요</a></li>
+            <li>2. <a href="#s-2">방송 특징</a></li>
+            <li>3. <a href="#s-3">주요 콘텐츠</a></li>
+            <li>4. <a href="#s-4">여담</a></li>
+        </ul>
+    </div>
+
+    <!-- 본문 내용 -->
+    <h2 id="s-1">1. 개요</h2>
+    <p>
+        SOOP에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
+    </p>
+
+    <h2 id="s-2">2. 방송 특징</h2>
+    <p>
+        주로 저녁부터 새벽까지 방송한다. <span class="strike">낮뱅 전환 선언을 하기는 했다.</span> 방송 내내 수많은 억까를 당하여 비명지르는 일이 많다
+    </p>
+
+    <h2 id="s-3">3. 주요 콘텐츠</h2>
+    <ul>
+        <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀도 이용한다.</li>
+	<li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
+	<li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈한 서버로는 마인짐이 있다.</li>
+        <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동게임을 한다.</li>
+    </ul>
+
+    <h2 id="s-4">4. 여담</h2>
+    <ul>
+        <li>너구리에 계란을 넣어먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥거리는 일이 있었다.</li>
+        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li>
+    </ul>
+
+    <div class="clear"></div>
+</div>
+
+<script>
+    /* 다크 모드 전환 */
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggleBtn');
+        
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+            btn.textContent = '☀️ 밝음 모드';
+        } else {
+            btn.textContent = '🌙 다크 모드';
+        }
+    }
+
+    /* 목차 접기/펼치기 */
+    function toggleToc() {
+        const tocContent = document.getElementById('tocContent');
+        const tocToggleBtn = document.getElementById('tocToggleBtn');
+        
+        if (tocContent.style.display === 'none') {
+            tocContent.style.display = 'block';
+            tocToggleBtn.textContent = '[접기]';
+        } else {
+            tocContent.style.display = 'none';
+            tocToggleBtn.textContent = '[펼치기]';
+        }
+    }
+
+    /* 첫 방송일 실시간 D+day 및 주년 계산 */
+    function calculateBroadcastDays() {
+        const startDate = new Date('2026-03-16T00:00:00');
+        const today = new Date();
+        
+        // 날짜 간격 계산 (일 단위)
+        const diffTime = today - startDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        
+        // 만 주년 계산
+        let years = today.getFullYear() - startDate.getFullYear();
+        const monthDiff = today.getMonth() - startDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < startDate.getDate())) {
+            years--;
+        }
+
+        const displayTarget = document.getElementById('firstBroadcastDays');
+        
+        if (diffDays > 0) {
+            if (years >= 1) {
+                displayTarget.textContent = `(+${diffDays}일, ${years}주년)`;
+            } else {
+                displayTarget.textContent = `(+${diffDays}일)`;
+            }
+        } else if (diffDays === 0) {
+            displayTarget.textContent = `(D-Day)`;
+        } else {
+            displayTarget.textContent = `(D${diffDays}일)`;
+        }
+    }
+
+    // 페이지 로드 시 계산 실행
+    window.onload = function() {
+        calculateBroadcastDays();
+    };
+</script>
+
+</body>
+</html>
