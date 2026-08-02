@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스트리머 - 나무위키</title>
+    <title>윤이결 - 나무위키</title>
     <style>
         :root {
             --namu-green: #008275;
@@ -22,7 +22,6 @@
             --namu-subtext: #888888;
         }
 
-        /* 다크 모드 스타일 변수 */
         body.dark-mode {
             --namu-bg: #121212;
             --namu-card-bg: #1e1e1e;
@@ -45,7 +44,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 나무위키 스타일 상단바 */
+        /* 상단바 */
         .navbar {
             background-color: var(--namu-navbar-bg);
             color: var(--namu-navbar-text);
@@ -69,7 +68,12 @@
             gap: 8px;
         }
 
-        .theme-toggle-btn {
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
             background-color: rgba(255, 255, 255, 0.2);
             color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.4);
@@ -81,8 +85,136 @@
             transition: background-color 0.2s;
         }
 
-        .theme-toggle-btn:hover {
+        .nav-btn:hover {
             background-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .nav-btn.active-tab {
+            background-color: #ffffff;
+            color: var(--namu-green);
+        }
+
+        /* 편집 전용 툴바 */
+        .editor-toolbar {
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 8px 20px;
+            position: sticky;
+            top: 50px;
+            z-index: 999;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+        }
+
+        .editor-toolbar.active {
+            display: flex;
+        }
+
+        /* 드롭다운 스타일 */
+        .editor-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown-btn:hover {
+            background: #555;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #2b2b2b;
+            min-width: 170px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+            border: 1px solid #555;
+            border-radius: 4px;
+            z-index: 1001;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 10px 14px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #3d3d3d;
+        }
+
+        .dropdown-content button:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #444;
+        }
+
+        .dropdown-content button.delete-btn:hover {
+            background-color: #c62828;
+        }
+
+        .action-btns-group {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-tool-btn {
+            background: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .edit-tool-btn.undo-btn {
+            background: #d81b60;
+            border-color: #ff4081;
+        }
+
+        .edit-tool-btn.undo-btn:hover {
+            background: #c2185b;
+        }
+
+        .edit-tool-btn.save-btn {
+            background: #2e7d32;
+            border-color: #4caf50;
+        }
+
+        .edit-tool-btn.save-btn:hover {
+            background: #1b5e20;
         }
 
         .container {
@@ -92,6 +224,10 @@
             border: 1px solid var(--namu-border);
             border-radius: 4px;
             padding: 30px;
+        }
+
+        .container.edit-mode-active {
+            outline: 2px dashed #ff9800;
         }
 
         /* 문서 제목 */
@@ -112,7 +248,7 @@
             color: var(--namu-subtext);
         }
 
-        /* 프로필 프로필 박스(프로필 인포복스) */
+        /* 프로필 인포복스 */
         .infobox {
             float: right;
             width: 320px;
@@ -247,15 +383,29 @@
             text-decoration: underline;
         }
 
-        /* 각주 스타일 */
         .footnote {
             font-size: 0.8rem;
             color: var(--namu-green);
             vertical-align: super;
             cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
         }
 
-        /* 취소선 스타일 */
+        .footnotes-section {
+            margin-top: 40px;
+            border-top: 1px solid var(--namu-border);
+            padding-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        hr.wiki-hr {
+            border: 0;
+            height: 1px;
+            background: var(--namu-border);
+            margin: 20px 0;
+        }
+
         .strike {
             text-decoration: line-through;
             color: var(--namu-subtext);
@@ -263,6 +413,106 @@
 
         .clear {
             clear: both;
+        }
+
+        /* 역사 목록 화면 전용 스타일 */
+        #historyContainer {
+            display: none;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--namu-border);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: var(--namu-th-bg);
+        }
+
+        .history-btn {
+            background-color: var(--namu-green);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
+        .history-btn:hover {
+            background-color: var(--namu-light-green);
+        }
+
+        .history-btn.rollback-btn {
+            background-color: #d32f2f;
+        }
+
+        .history-btn.rollback-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        /* 미리보기 모달 팝업 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--namu-card-bg);
+            color: var(--namu-text);
+            width: 80%;
+            max-width: 900px;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background: var(--namu-green);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -273,23 +523,75 @@
     <a href="#" class="navbar-brand">
         <span>이결위키</span>
     </a>
-    <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 다크 모드</button>
+    <div class="nav-buttons">
+        <button class="nav-btn active-tab" id="docViewBtn" onclick="switchView('doc')">📄 문서</button>
+        <button class="nav-btn" id="historyViewBtn" onclick="switchView('history')">📜 역사</button>
+        <button class="nav-btn" id="devCodeBtn" onclick="toggleEditMode()">🛠️ 개발진 코드</button>
+        <button class="nav-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 다크 모드</button>
+    </div>
 </nav>
 
-<div class="container">
-    <!-- 문서 제목 -->
+<!-- 이미지 파일 업로드 input -->
+<input type="file" id="imageFileInput" accept="image/*" style="display: none;" onchange="handleFileSelected(event)">
+
+<!-- 수정 모드 툴바 -->
+<div class="editor-toolbar" id="editorToolbar">
+    <div class="editor-dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown('tocDropdown')">📌 목차 툴 ▾</button>
+        <div class="dropdown-content" id="tocDropdown">
+            <button onclick="addTocItem()">➕ 목차 추가</button>
+            <button class="delete-btn" onclick="deleteTocItem()">➖ 목차 삭제</button>
+        </div>
+    </div>
+
+    <div class="editor-dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown('imageDropdown')">🖼️ 이미지 툴 ▾</button>
+        <div class="dropdown-content" id="imageDropdown">
+            <button onclick="changeImageByUrl()">🌐 이미지 교체 (URL)</button>
+            <button onclick="uploadImageFile()">📁 이미지 교체 (파일)</button>
+            <button onclick="resizeImage()">📐 이미지 크기 조절</button>
+            <button class="delete-btn" onclick="deleteImage()">🗑️ 이미지 삭제</button>
+        </div>
+    </div>
+
+    <div class="editor-dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown('textDropdown')">📝 서식 툴 ▾</button>
+        <div class="dropdown-content" id="textDropdown">
+            <button onclick="insertBulletList()">• 글머리 기호 추가</button>
+            <button onclick="insertFootnote()">📌 각주 추가</button>
+            <button onclick="insertHR()">➖ 구분선(바) 추가</button>
+            <button onclick="applyStrike()"><s>S</s> 취소선</button>
+            <button onclick="insertLink()">🔗 링크 삽입</button>
+        </div>
+    </div>
+
+    <div class="editor-dropdown">
+        <button class="dropdown-btn" onclick="toggleDropdown('infoboxDropdown')">📋 인포복스 툴 ▾</button>
+        <div class="dropdown-content" id="infoboxDropdown">
+            <button onclick="addInfoboxRow()">➕ 인포복스 열 추가</button>
+            <button class="delete-btn" onclick="deleteInfoboxRow()">➖ 인포복스 열 삭제</button>
+        </div>
+    </div>
+
+    <div class="action-btns-group">
+        <button class="edit-tool-btn undo-btn" onclick="undoEdit()">↩️ 수정 취소</button>
+        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 변경사항 저장</button>
+    </div>
+</div>
+
+<!-- 1. 메인 문서 뷰 컨테이너 -->
+<div class="container" id="mainContainer">
     <div class="doc-title">
         <span>윤이결</span>
         <span class="category">분류: SOOP 스트리머</span>
     </div>
 
-    <!-- 인포복스 (오른쪽 프로필 상자) -->
     <div class="infobox">
         <div class="infobox-header">스트리머 프로필</div>
         <div class="infobox-image">
-            <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지">
+            <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지" id="profileImg">
         </div>
-        <table>
+        <table id="infoboxTable">
             <tr>
                 <th>이름</th>
                 <td>윤이결</td>
@@ -321,7 +623,6 @@
         </table>
     </div>
 
-    <!-- 개요 및 목차 -->
     <p>
         <a href="https://www.sooplive.com" class="wiki-link">SOOP</a>에서 활동하는 대한민국 스트리머. <span class="strike">주로 수다를 떨거나 억까를 당하는 것이 콘텐츠다.</span>
     </p>
@@ -339,7 +640,6 @@
         </ul>
     </div>
 
-    <!-- 본문 내용 -->
     <h2 id="s-1">1. 개요</h2>
     <p>
         SOOP에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
@@ -353,8 +653,8 @@
     <h2 id="s-3">3. 주요 콘텐츠</h2>
     <ul>
         <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀도 이용한다.</li>
-	<li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
-	<li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈한 서버로는 마인짐이 있다.</li>
+        <li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
+        <li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈한 서버로는 마인짐이 있다.</li>
         <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동게임을 한다.</li>
     </ul>
 
@@ -364,29 +664,559 @@
         <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li>
     </ul>
 
+    <div class="footnotes-section" id="footnotesSection">
+        <ol id="footnoteList"></ol>
+    </div>
+
     <div class="clear"></div>
 </div>
 
+<!-- 2. 문서 역사 뷰 컨테이너 -->
+<div class="container" id="historyContainer">
+    <div class="doc-title">
+        <span>윤이결 (편집 역사)</span>
+        <span class="category">역사 기록</span>
+    </div>
+    <p>문서의 모든 변경 기록입니다. 과거 버전의 미리보기 및 특정 버전으로의 복원이 가능합니다.</p>
+    
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">버전</th>
+                <th style="width: 25%;">수정 시각</th>
+                <th style="width: 40%;">요약 / 사유</th>
+                <th style="width: 25%;">관리 기능</th>
+            </tr>
+        </thead>
+        <tbody id="historyTableBody">
+            <!-- 역사 목록이 JS로 들어옵니다 -->
+        </tbody>
+    </table>
+</div>
+
+<!-- 미리보기 모달 팝업 -->
+<div class="modal-overlay" id="previewModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="previewModalTitle">당시 문서 미리보기</span>
+            <button class="modal-close-btn" onclick="closePreviewModal()">✖</button>
+        </div>
+        <div class="modal-body" id="previewModalBody">
+            <!-- 과거 HTML 내용이 렌더링 됩니다 -->
+        </div>
+    </div>
+</div>
+
 <script>
-    /* 다크 모드 전환 */
-    function toggleTheme() {
-        const body = document.body;
-        const btn = document.getElementById('themeToggleBtn');
-        
-        body.classList.toggle('dark-mode');
-        
-        if (body.classList.contains('dark-mode')) {
-            btn.textContent = '☀️ 밝음 모드';
+    let isEditMode = false;
+    let footnoteCount = 0;
+    let targetImgForUpload = null;
+    let backupContent = ""; 
+    let historyData = []; // 역사 저장소
+
+    /* 초기 기본 기록 생성 및 로드 */
+    function initHistory() {
+        const savedHistory = localStorage.getItem('yigyeol_wiki_history');
+        if (savedHistory) {
+            historyData = JSON.parse(savedHistory);
         } else {
-            btn.textContent = '🌙 다크 모드';
+            // 최초 기록 저장
+            const initialContent = document.getElementById('mainContainer').innerHTML;
+            historyData.push({
+                rev: 1,
+                date: new Date().toLocaleString('ko-KR'),
+                summary: '최초 문서 작성',
+                content: initialContent
+            });
+            localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
+        }
+        renderHistoryTable();
+    }
+
+    /* 화면 전환 (문서 <-> 역사) */
+    function switchView(viewName) {
+        const mainContainer = document.getElementById('mainContainer');
+        const historyContainer = document.getElementById('historyContainer');
+        const docBtn = document.getElementById('docViewBtn');
+        const historyBtn = document.getElementById('historyViewBtn');
+
+        if (viewName === 'doc') {
+            mainContainer.style.display = 'block';
+            historyContainer.style.display = 'none';
+            docBtn.classList.add('active-tab');
+            historyBtn.classList.remove('active-tab');
+        } else {
+            mainContainer.style.display = 'none';
+            historyContainer.style.display = 'block';
+            docBtn.classList.remove('active-tab');
+            historyBtn.classList.add('active-tab');
+            renderHistoryTable();
         }
     }
 
-    /* 목차 접기/펼치기 */
+    /* 역사 테이블 렌더링 */
+    function renderHistoryTable() {
+        const tbody = document.getElementById('historyTableBody');
+        tbody.innerHTML = '';
+
+        // 최근 역사가 위로 오도록 역순 출력
+        [...historyData].reverse().forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>r${item.rev}</td>
+                <td>${item.date}</td>
+                <td>${item.summary || '내용 수정'}</td>
+                <td>
+                    <button class="history-btn" onclick="previewHistory(${item.rev})">👁️ 미리보기</button>
+                    <button class="history-btn rollback-btn" onclick="rollbackToVersion(${item.rev})">↩️ 이 버전으로 되돌리기</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    /* 저장 시 역사 데이터 추가 */
+    function saveContent() {
+        const container = document.getElementById('mainContainer');
+        const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '문서 내용 변경';
+
+        localStorage.setItem('yigyeol_wiki_content', container.innerHTML);
+        backupContent = container.innerHTML;
+
+        // 역사 객체 추가
+        const newRev = historyData.length + 1;
+        historyData.push({
+            rev: newRev,
+            date: new Date().toLocaleString('ko-KR'),
+            summary: summary,
+            content: container.innerHTML
+        });
+
+        localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
+        alert('변경사항과 편집 역사가 성공적으로 저장되었습니다.');
+    }
+
+    /* 당시 문서 미리보기 */
+    function previewHistory(rev) {
+        const target = historyData.find(h => h.rev === rev);
+        if (!target) return;
+
+        document.getElementById('previewModalTitle').textContent = `r${target.rev} 버전 미리보기 (${target.date})`;
+        document.getElementById('previewModalBody').innerHTML = target.content;
+        document.getElementById('previewModal').classList.add('active');
+    }
+
+    function closePreviewModal() {
+        document.getElementById('previewModal').classList.remove('active');
+    }
+
+    /* 당시 문서로 되돌리기 (롤백) */
+    function rollbackToVersion(rev) {
+        const target = historyData.find(h => h.rev === rev);
+        if (!target) return;
+
+        if (confirm(`정말로 r${rev} 버전 시점으로 문서를 되돌리시겠습니까?`)) {
+            const container = document.getElementById('mainContainer');
+            container.innerHTML = target.content;
+
+            // 되돌린 사실을 역사 항목에 추가
+            const newRev = historyData.length + 1;
+            const rollbackSummary = `r${rev} 버전으로 되돌림`;
+            
+            historyData.push({
+                rev: newRev,
+                date: new Date().toLocaleString('ko-KR'),
+                summary: rollbackSummary,
+                content: target.content
+            });
+
+            localStorage.setItem('yigyeol_wiki_content', target.content);
+            localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
+
+            calculateBroadcastDays();
+            switchView('doc');
+            alert(`문서가 r${rev} 버전으로 성공적으로 되돌려졌습니다.`);
+        }
+    }
+
+    /* 저장된 콘텐츠 로드 */
+    function loadSavedContent() {
+        const saved = localStorage.getItem('yigyeol_wiki_content');
+        if (saved) {
+            document.getElementById('mainContainer').innerHTML = saved;
+            calculateBroadcastDays();
+        }
+    }
+
+    /* 수정 취소 */
+    function undoEdit() {
+        if (!isEditMode) return;
+        if (confirm('저장되지 않은 모든 수정 사항을 취소하고 원래 상태로 되돌리시겠습니까?')) {
+            const container = document.getElementById('mainContainer');
+            if (backupContent) {
+                container.innerHTML = backupContent;
+            } else {
+                loadSavedContent();
+            }
+            calculateBroadcastDays();
+            alert('수정 사항이 취소되었습니다.');
+        }
+    }
+
+    /* 툴바 및 서식 기능들 */
+    function toggleDropdown(id) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            if (dropdowns[i].id !== id) {
+                dropdowns[i].classList.remove('show');
+            }
+        }
+        document.getElementById(id).classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-btn')) {
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    function toggleEditMode() {
+        const container = document.getElementById('mainContainer');
+        const devBtn = document.getElementById('devCodeBtn');
+        const toolbar = document.getElementById('editorToolbar');
+
+        if (!isEditMode) {
+            const inputCode = prompt('개발진 코드를 입력하세요:');
+            if (inputCode === 'C8972d') {
+                isEditMode = true;
+                backupContent = container.innerHTML;
+                container.contentEditable = "true";
+                container.classList.add('edit-mode-active');
+                toolbar.classList.add('active');
+                devBtn.textContent = '✏️ 수정 완료';
+                devBtn.style.backgroundColor = '#d32f2f';
+                alert('수정 모드가 활성화되었습니다.');
+            } else if (inputCode !== null) {
+                alert('코드가 일치하지 않습니다.');
+            }
+        } else {
+            isEditMode = false;
+            container.contentEditable = "false";
+            container.classList.remove('edit-mode-active');
+            toolbar.classList.remove('active');
+            devBtn.textContent = '🛠️ 개발진 코드';
+            devBtn.style.backgroundColor = '';
+            alert('수정 모드가 종료되었습니다.');
+        }
+    }
+
+    function getDocumentImages() {
+        const container = document.getElementById('mainContainer');
+        return container ? Array.from(container.querySelectorAll('img')) : [];
+    }
+
+    function selectTargetImage(actionName) {
+        const images = getDocumentImages();
+        if (images.length === 0) {
+            alert('문서 내에 이미지 요소가 존재하지 않습니다.');
+            return null;
+        }
+
+        let msg = `${actionName}할 이미지를 선택해 주세요:\n\n`;
+        images.forEach((img, idx) => {
+            const name = img.alt || img.id || `이미지 ${idx + 1}`;
+            msg += `${idx + 1}. ${name} (${img.src.substring(0, 30)}...)\n`;
+        });
+
+        const input = prompt(msg);
+        if (input === null) return null;
+
+        const idx = parseInt(input, 10) - 1;
+        if (isNaN(idx) || idx < 0 || idx >= images.length) {
+            alert('올바른 번호를 입력해 주세요.');
+            return null;
+        }
+
+        return images[idx];
+    }
+
+    function changeImageByUrl() {
+        if (!isEditMode) return;
+        const targetImg = selectTargetImage('URL로 교체');
+        if (!targetImg) return;
+
+        const newUrl = prompt('새로운 이미지 URL을 입력해 주세요:', targetImg.src);
+        if (newUrl && newUrl.trim() !== '') {
+            targetImg.src = newUrl.trim();
+            alert('이미지 URL이 변경되었습니다.');
+        }
+    }
+
+    function uploadImageFile() {
+        if (!isEditMode) return;
+        const targetImg = selectTargetImage('파일 업로드 교체');
+        if (!targetImg) return;
+
+        targetImgForUpload = targetImg;
+        document.getElementById('imageFileInput').click();
+    }
+
+    function handleFileSelected(event) {
+        const file = event.target.files[0];
+        if (!file || !targetImgForUpload) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            targetImgForUpload.src = e.target.result;
+            alert('이미지가 성공적으로 교체되었습니다.');
+            targetImgForUpload = null;
+        };
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    }
+
+    function resizeImage() {
+        if (!isEditMode) return;
+        const targetImg = selectTargetImage('크기 조절');
+        if (!targetImg) return;
+
+        const width = prompt('너비(width)를 입력하세요:', targetImg.style.width || '100%');
+        if (width === null) return;
+
+        const height = prompt('높이(height)를 입력하세요:', targetImg.style.height || 'auto');
+        if (height === null) return;
+
+        targetImg.style.width = width;
+        targetImg.style.height = height;
+        alert('이미지 크기가 변경되었습니다.');
+    }
+
+    function deleteImage() {
+        if (!isEditMode) return;
+        const targetImg = selectTargetImage('삭제');
+        if (!targetImg) return;
+
+        if (confirm('선택한 이미지를 정말 삭제하시겠습니까?')) {
+            targetImg.remove();
+            alert('이미지가 삭제되었습니다.');
+        }
+    }
+
+    function insertBulletList() {
+        if (!isEditMode) return;
+        const input = prompt('글머리 기호 항목 내용을 입력하세요:');
+        if (!input || input.trim() === '') return;
+
+        const items = input.split(/[\n,]/).map(item => item.trim()).filter(item => item.length > 0);
+        if (items.length === 0) return;
+
+        let listHTML = '<ul>';
+        items.forEach(item => { listHTML += `<li>${item}</li>`; });
+        listHTML += '</ul>';
+
+        document.execCommand('insertHTML', false, listHTML);
+    }
+
+    function addTocItem() {
+        if (!isEditMode) return;
+        const title = prompt('새로 추가할 목차의 제목을 입력하세요:');
+        if (!title || title.trim() === '') return;
+
+        const tocContent = document.getElementById('tocContent');
+        if (!tocContent) return;
+
+        const currentCount = tocContent.querySelectorAll('li').length;
+        const newIndex = currentCount + 1;
+        const sectionId = `s-${newIndex}`;
+
+        const li = document.createElement('li');
+        li.innerHTML = `${newIndex}. <a href="#${sectionId}">${title.trim()}</a>`;
+        tocContent.appendChild(li);
+
+        const h2 = document.createElement('h2');
+        h2.id = sectionId;
+        h2.textContent = `${newIndex}. ${title.trim()}`;
+
+        const p = document.createElement('p');
+        p.textContent = '내용을 입력하세요.';
+
+        const fnSection = document.getElementById('footnotesSection');
+        if (fnSection) {
+            fnSection.parentNode.insertBefore(h2, fnSection);
+            fnSection.parentNode.insertBefore(p, fnSection);
+        } else {
+            document.getElementById('mainContainer').appendChild(h2);
+            document.getElementById('mainContainer').appendChild(p);
+        }
+
+        alert(`'${title.trim()}' 목차가 추가되었습니다.`);
+    }
+
+    function deleteTocItem() {
+        if (!isEditMode) return;
+        const tocContent = document.getElementById('tocContent');
+        if (!tocContent) return;
+
+        const items = tocContent.querySelectorAll('li');
+        if (items.length === 0) return;
+
+        let optionsList = '삭제할 목차의 번호를 입력하세요:\n\n';
+        items.forEach((li, idx) => { optionsList += `${idx + 1}. ${li.textContent}\n`; });
+
+        const inputIndex = prompt(optionsList);
+        if (inputIndex === null) return;
+
+        const targetIndex = parseInt(inputIndex, 10) - 1;
+        if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= items.length) return;
+
+        const sectionId = `s-${targetIndex + 1}`;
+        const targetH2 = document.getElementById(sectionId);
+
+        if (targetH2) {
+            let nextElem = targetH2.nextElementSibling;
+            if (nextElem && (nextElem.tagName === 'P' || nextElem.tagName === 'UL' || nextElem.tagName === 'OL')) {
+                nextElem.remove();
+            }
+            targetH2.remove();
+        }
+
+        items[targetIndex].remove();
+        reindexTocAndSections();
+        alert(`${targetIndex + 1}번 목차가 삭제되었습니다.`);
+    }
+
+    function reindexTocAndSections() {
+        const tocContent = document.getElementById('tocContent');
+        if (!tocContent) return;
+
+        const liList = tocContent.querySelectorAll('li');
+        liList.forEach((li, idx) => {
+            const newIndex = idx + 1;
+            const newSectionId = `s-${newIndex}`;
+            const anchor = li.querySelector('a');
+
+            if (anchor) {
+                const oldHref = anchor.getAttribute('href');
+                const oldSectionId = oldHref ? oldHref.replace('#', '') : '';
+                const titleText = anchor.textContent;
+
+                anchor.setAttribute('href', `#${newSectionId}`);
+                li.childNodes[0].nodeValue = `${newIndex}. `;
+
+                const h2 = document.getElementById(oldSectionId);
+                if (h2) {
+                    h2.id = newSectionId;
+                    h2.textContent = `${newIndex}. ${titleText}`;
+                }
+            }
+        });
+    }
+
+    function insertFootnote() {
+        if (!isEditMode) return;
+        const noteText = prompt('각주에 들어갈 설명을 입력하세요:');
+        if (!noteText) return;
+
+        footnoteCount++;
+        const fnId = `fn-${footnoteCount}`;
+        const fnRefId = `fnref-${footnoteCount}`;
+
+        const fnHTML = `<a href="#${fnId}" class="footnote" id="${fnRefId}">[${footnoteCount}]</a>`;
+        document.execCommand('insertHTML', false, fnHTML);
+
+        const list = document.getElementById('footnoteList');
+        if (list) {
+            const li = document.createElement('li');
+            li.id = fnId;
+            li.innerHTML = `${noteText} <a href="#${fnRefId}" class="wiki-link">↩</a>`;
+            list.appendChild(li);
+        }
+    }
+
+    function insertHR() {
+        if (!isEditMode) return;
+        document.execCommand('insertHTML', false, '<hr class="wiki-hr">');
+    }
+
+    function applyStrike() {
+        if (!isEditMode) return;
+        const selection = window.getSelection().toString();
+        if (selection) {
+            document.execCommand('insertHTML', false, `<span class="strike">${selection}</span>`);
+        } else {
+            alert('취소선을 적용할 텍스트를 드래그하여 선택해주세요.');
+        }
+    }
+
+    function insertLink() {
+        if (!isEditMode) return;
+        const selection = window.getSelection().toString();
+        const url = prompt('연결할 URL 링크를 입력하세요:');
+        if (url) {
+            const label = selection || url;
+            document.execCommand('insertHTML', false, `<a href="${url}" target="_blank" class="wiki-link">${label}</a>`);
+        }
+    }
+
+    function addInfoboxRow() {
+        if (!isEditMode) return;
+        const table = document.querySelector('.infobox table') || document.getElementById('infoboxTable');
+        if (!table) return;
+
+        const headerText = prompt('항목 이름을 입력하세요:');
+        if (!headerText || headerText.trim() === '') return;
+
+        const valueText = prompt('내용을 입력하세요:');
+        if (valueText === null) return;
+
+        const newRow = table.insertRow();
+        const th = document.createElement('th');
+        th.textContent = headerText.trim();
+        const td = document.createElement('td');
+        td.innerHTML = valueText.trim();
+
+        newRow.appendChild(th);
+        newRow.appendChild(td);
+    }
+
+    function deleteInfoboxRow() {
+        if (!isEditMode) return;
+        const table = document.querySelector('.infobox table') || document.getElementById('infoboxTable');
+        if (!table || table.rows.length === 0) return;
+
+        let optionsList = '삭제할 항목의 번호를 입력하세요:\n\n';
+        for (let i = 0; i < table.rows.length; i++) {
+            const th = table.rows[i].querySelector('th');
+            const label = th ? th.textContent : `열 ${i + 1}`;
+            optionsList += `${i + 1}. ${label}\n`;
+        }
+
+        const inputIndex = prompt(optionsList);
+        if (inputIndex === null) return;
+
+        const targetIndex = parseInt(inputIndex, 10) - 1;
+        if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= table.rows.length) return;
+
+        table.deleteRow(targetIndex);
+        alert('선택 항목이 삭제되었습니다.');
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggleBtn');
+        body.classList.toggle('dark-mode');
+        btn.textContent = body.classList.contains('dark-mode') ? '☀️ 밝음 모드' : '🌙 다크 모드';
+    }
+
     function toggleToc() {
         const tocContent = document.getElementById('tocContent');
         const tocToggleBtn = document.getElementById('tocToggleBtn');
-        
         if (tocContent.style.display === 'none') {
             tocContent.style.display = 'block';
             tocToggleBtn.textContent = '[접기]';
@@ -396,16 +1226,12 @@
         }
     }
 
-    /* 첫 방송일 실시간 D+day 및 주년 계산 */
     function calculateBroadcastDays() {
         const startDate = new Date('2026-03-16T00:00:00');
         const today = new Date();
-        
-        // 날짜 간격 계산 (일 단위)
         const diffTime = today - startDate;
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
         
-        // 만 주년 계산
         let years = today.getFullYear() - startDate.getFullYear();
         const monthDiff = today.getMonth() - startDate.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < startDate.getDate())) {
@@ -413,22 +1239,20 @@
         }
 
         const displayTarget = document.getElementById('firstBroadcastDays');
-        
-        if (diffDays > 0) {
-            if (years >= 1) {
-                displayTarget.textContent = `(+${diffDays}일, ${years}주년)`;
+        if (displayTarget) {
+            if (diffDays > 0) {
+                displayTarget.textContent = years >= 1 ? `(+${diffDays}일, ${years}주년)` : `(+${diffDays}일)`;
+            } else if (diffDays === 0) {
+                displayTarget.textContent = `(D-Day)`;
             } else {
-                displayTarget.textContent = `(+${diffDays}일)`;
+                displayTarget.textContent = `(D${diffDays}일)`;
             }
-        } else if (diffDays === 0) {
-            displayTarget.textContent = `(D-Day)`;
-        } else {
-            displayTarget.textContent = `(D${diffDays}일)`;
         }
     }
 
-    // 페이지 로드 시 계산 실행
     window.onload = function() {
+        loadSavedContent();
+        initHistory();
         calculateBroadcastDays();
     };
 </script>
