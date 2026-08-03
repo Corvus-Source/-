@@ -714,13 +714,45 @@
     let backupContent = ""; 
     let historyData = []; // 역사 저장소
 
+    /* URL Hash에 내용을 인코딩하여 반영 및 복사 */
+    function encodeToHash(data) {
+        try {
+            return encodeURIComponent(btoa(unescape(encodeURIComponent(data))));
+        } catch(e) {
+            return "";
+        }
+    }
+
+    function decodeFromHash(hash) {
+        try {
+            return decodeURIComponent(escape(atob(decodeURIComponent(hash))));
+        } catch(e) {
+            return null;
+        }
+    }
+
     /* 초기 기본 기록 생성 및 로드 */
     function initHistory() {
+        const hash = window.location.hash.substring(1);
+        let hashContent = null;
+        
+        if (hash) {
+            hashContent = decodeFromHash(hash);
+        }
+
+        if (hashContent) {
+            document.getElementById('mainContainer').innerHTML = hashContent;
+        } else {
+            const saved = localStorage.getItem('yigyeol_wiki_content');
+            if (saved) {
+                document.getElementById('mainContainer').innerHTML = saved;
+            }
+        }
+
         const savedHistory = localStorage.getItem('yigyeol_wiki_history');
         if (savedHistory) {
             historyData = JSON.parse(savedHistory);
         } else {
-            // 최초 기록 저장
             const initialContent = document.getElementById('mainContainer').innerHTML;
             historyData.push({
                 rev: 1,
@@ -759,7 +791,6 @@
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '';
 
-        // 최근 역사가 위로 오도록 역순 출력
         [...historyData].reverse().forEach((item) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -775,53 +806,38 @@
         });
     }
 
-    /* GitHub API를 통한 저장소 직접 업데이트 함수 */
-    async function saveContent() {
+    /* 저장 시 URL Hash 자동 저장 및 링크 클립보드 복사 */
+    function saveContent() {
         const container = document.getElementById('mainContainer');
-        const summary = prompt('수정 요약을 입력해 주세요:') || '문서 내용 변경';
+        const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '문서 내용 변경';
 
-        // 1. 저장할 전체 HTML 구성
-        const updatedHTML = `<!DOCTYPE html>\n` + document.documentElement.outerHTML;
+        const contentHtml = container.innerHTML;
+        localStorage.setItem('yigyeol_wiki_content', contentHtml);
+        backupContent = contentHtml;
 
-        // 2. GitHub 설정 정보 (토큰은 보안에 주의)
-        const GITHUB_TOKEN = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"; // GitHub에서 발급받은 Personal Access Token
-        const OWNER = "corvus-source";
-        const REPO = "corvus-source.github.io"; // 또는 해당 레포지토리 이름
-        const PATH = "index.html"; // 또는 해당 파일 경로
-
-        try {
-            // 기존 파일의 SHA 값 가져오기 (GitHub API 필수 과정)
-            const getFileRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`);
-            const fileData = await getFileRes.json();
-            const sha = fileData.sha;
-
-            // Base64 인코딩 (UTF-8 대응)
-            const encodedContent = btoa(unescape(encodeURIComponent(updatedHTML)));
-
-            // GitHub API로 Commit 생성
-            const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${GITHUB_TOKEN}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    message: summary,
-                    content: encodedContent,
-                    sha: sha
-                })
-            });
-
-            if (response.ok) {
-                alert('GitHub 저장소에 성공적으로 반영되었습니다! (배포까지 1~2분 소요될 수 있습니다)');
-            } else {
-                const errData = await response.json();
-                alert('저장 실패: ' + errData.message);
-            }
-        } catch (error) {
-            console.error(error);
-            alert('저장 중 오류가 발생했습니다.');
+        // URL Hash에 데이터 인코딩 후 브라우저 주소창 변경
+        const encoded = encodeToHash(contentHtml);
+        if (encoded) {
+            window.location.hash = encoded;
         }
+
+        // 역사 객체 추가
+        const newRev = historyData.length + 1;
+        historyData.push({
+            rev: newRev,
+            date: new Date().toLocaleString('ko-KR'),
+            summary: summary,
+            content: contentHtml
+        });
+
+        localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
+
+        // 공유 가능한 URL을 자동 클립보드 복사
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('변경사항이 성공적으로 저장되었으며, 타인에게 공유 가능한 수정본 링크가 클립보드에 복사되었습니다!\n주소창의 URL을 그대로 공유하셔도 됩니다.');
+        }).catch(() => {
+            alert('변경사항이 저장되었습니다. 공유하실 때에는 현재 브라우저 주소창 전체(URL)를 복사해서 공유해 주세요.');
+        });
     }
 
     /* 당시 문서 미리보기 */
@@ -847,7 +863,6 @@
             const container = document.getElementById('mainContainer');
             container.innerHTML = target.content;
 
-            // 되돌린 사실을 역사 항목에 추가
             const newRev = historyData.length + 1;
             const rollbackSummary = `r${rev} 버전으로 되돌림`;
             
@@ -861,6 +876,11 @@
             localStorage.setItem('yigyeol_wiki_content', target.content);
             localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
 
+            const encoded = encodeToHash(target.content);
+            if (encoded) {
+                window.location.hash = encoded;
+            }
+
             calculateBroadcastDays();
             switchView('doc');
             alert(`문서가 r${rev} 버전으로 성공적으로 되돌려졌습니다.`);
@@ -869,6 +889,16 @@
 
     /* 저장된 콘텐츠 로드 */
     function loadSavedContent() {
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            const decoded = decodeFromHash(hash);
+            if (decoded) {
+                document.getElementById('mainContainer').innerHTML = decoded;
+                calculateBroadcastDays();
+                return;
+            }
+        }
+
         const saved = localStorage.getItem('yigyeol_wiki_content');
         if (saved) {
             document.getElementById('mainContainer').innerHTML = saved;
