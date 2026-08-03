@@ -366,7 +366,6 @@
             border-bottom: 1px solid var(--namu-border);
             padding-bottom: 5px;
             margin-top: 30px;
-	    clear: both;
         }
 
         h3 {
@@ -567,7 +566,7 @@
 
     <div class="action-btns-group">
         <button class="edit-tool-btn undo-btn" onclick="undoEdit()">↩️ 수정 취소</button>
-        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 GitHub에 즉시 커밋</button>
+        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 변경사항 저장</button>
     </div>
 </div>
 
@@ -631,6 +630,9 @@
             <li>4. <a href="#s-4">여담</a></li>
         </ul>
     </div>
+
+    <!-- 목차와 개요 사이에 clear 구문을 추가하여 1. 개요부터 프로필 인포복스 밑으로 떨어지도록 설정 -->
+    <div class="clear"></div>
 
     <h2 id="s-1">1. 개요</h2>
     <p>
@@ -1184,7 +1186,5 @@
         calculateBroadcastDays();
     };
 </script>
-
-
 
 </body></html>
