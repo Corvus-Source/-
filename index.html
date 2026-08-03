@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko"><head>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>윤이결 - 이결위키</title>
@@ -451,14 +452,6 @@
             background-color: var(--namu-light-green);
         }
 
-        .history-btn.rollback-btn {
-            background-color: #d32f2f;
-        }
-
-        .history-btn.rollback-btn:hover {
-            background-color: #b71c1c;
-        }
-
         /* 미리보기 모달 팝업 */
         .modal-overlay {
             display: none;
@@ -524,7 +517,7 @@
     </a>
     <div class="nav-buttons">
         <button class="nav-btn active-tab" id="docViewBtn" onclick="switchView('doc')">📄 문서</button>
-        <button class="nav-btn" id="historyViewBtn" onclick="switchView('history')">📜 역사</button>
+        <button class="nav-btn" id="historyViewBtn" onclick="switchView('history')">📜 커밋 역사</button>
         <button class="nav-btn" id="devCodeBtn" onclick="toggleEditMode()">🛠️ 개발진 코드</button>
         <button class="nav-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 다크 모드</button>
     </div>
@@ -574,7 +567,7 @@
 
     <div class="action-btns-group">
         <button class="edit-tool-btn undo-btn" onclick="undoEdit()">↩️ 수정 취소</button>
-        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 변경사항 저장</button>
+        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 GitHub에 즉시 커밋</button>
     </div>
 </div>
 
@@ -591,7 +584,7 @@
             <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지" id="profileImg">
         </div>
         <table id="infoboxTable">
-            <tbody><tr>
+            <tr>
                 <th>이름</th>
                 <td>윤이결</td>
             </tr>
@@ -609,7 +602,7 @@
             </tr>
             <tr>
                 <th>첫 방송일</th>
-                <td>2026년 3월 16일 <span id="firstBroadcastDays">(+141일)</span></td>
+                <td>2026년 3월 16일 <span id="firstBroadcastDays"></span></td>
             </tr>
             <tr>
                 <th>주요 콘텐츠</th>
@@ -619,7 +612,7 @@
                 <th>팬덤명</th>
                 <td>먼지단</td>
             </tr>
-        </tbody></table>
+        </table>
     </div>
 
     <p>
@@ -645,20 +638,22 @@
     </p>
 
     <h2 id="s-2">2. 방송 특징</h2>
-    <p><span style="color: rgb(28, 28, 28); font-family: -apple-system, BlinkMacSystemFont, &quot;Malgun Gothic&quot;, &quot;맑은 고딕&quot;, &quot;Apple SD Gothic Neo&quot;, helvetica, &quot;나눔바른고딕 옛한글&quot;, &quot;NanumBarunGothic YetHangul&quot;, sans-serif; font-size: 16px; letter-spacing: -0.3px;">주로 저녁부터 새벽까지 방송한다.&nbsp;</span><span class="strike">낮뱅 전환 선언을 하기는 했다.</span><span style="color: rgb(28, 28, 28); font-family: -apple-system, BlinkMacSystemFont, &quot;Malgun Gothic&quot;, &quot;맑은 고딕&quot;, &quot;Apple SD Gothic Neo&quot;, helvetica, &quot;나눔바른고딕 옛한글&quot;, &quot;NanumBarunGothic YetHangul&quot;, sans-serif; font-size: 16px; letter-spacing: -0.3px;">&nbsp;방송 내내 수많은 억까를 당하여 비명 지르는 일이 많다</span></p>
+    <p>
+        주로 저녁부터 새벽까지 방송한다. <span class="strike">낮뱅 전환 선언을 하기는 했다.</span> 방송 내내 수많은 억까를 당하여 비명지르는 일이 많다
+    </p>
 
     <h2 id="s-3">3. 주요 콘텐츠</h2>
     <ul>
-        <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀 등의 사이트도 이용한다.</li>
+        <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀도 이용한다.</li>
         <li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
-        <li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈 한 서버로는 마인짐이 있다.</li>
-        <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동 게임을 한다.</li>
+        <li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈한 서버로는 마인짐이 있다.</li>
+        <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동게임을 한다.</li>
     </ul>
 
     <h2 id="s-4">4. 여담</h2>
     <ul>
-        <li>너구리에 계란을 넣어 먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥거리는 일이 있었다.</li>
-        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li><li>어릴 적 트라우마로 인하여 너무 무섭거나 너무 고어적인 게임은 하지 못한다고 방송 중에 밝힌 적이 있다.</li><li>3D멀미가 심한 편이다. 마크도 1인칭으로 오래하면 멀미가 날 정도라고 한다.</li><li>트라우마로 인하여 오이를 먹지 못 한다. 외에도 야채를 매우 싫어하여 가지,고추,당근,피망 등등 절대 야채를 먹지 않는다.</li>
+        <li>너구리에 계란을 넣어먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥거리는 일이 있었다.</li>
+        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li>
     </ul>
 
     <div class="footnotes-section" id="footnotesSection">
@@ -668,49 +663,49 @@
     <div class="clear"></div>
 </div>
 
-<!-- 2. 문서 역사 뷰 컨테이너 -->
+<!-- 2. 문서 역사 뷰 컨테이너 (GitHub Commits 연동) -->
 <div class="container" id="historyContainer">
     <div class="doc-title">
-        <span>윤이결 (편집 역사)</span>
-        <span class="category">역사 기록</span>
+        <span>윤이결 (GitHub 커밋 히스토리)</span>
+        <span class="category">DB 연동</span>
     </div>
-    <p>문서의 모든 변경 기록입니다. 과거 버전의 미리보기 및 특정 버전으로의 복원이 가능합니다.</p>
+    <p>GitHub 레포지토리에 커밋된 실시간 변경 기록입니다.</p>
     
     <table class="history-table">
         <thead>
             <tr>
-                <th style="width: 10%;">버전</th>
+                <th style="width: 20%;">커밋 해시</th>
                 <th style="width: 25%;">수정 시각</th>
-                <th style="width: 40%;">요약 / 사유</th>
-                <th style="width: 25%;">관리 기능</th>
+                <th style="width: 40%;">커밋 메시지</th>
+                <th style="width: 15%;">상세보기</th>
             </tr>
         </thead>
         <tbody id="historyTableBody">
-            <!-- 역사 목록이 JS로 들어옵니다 -->
+            <!-- GitHub 커밋 기록이 들어옵니다 -->
         </tbody>
     </table>
 </div>
 
-<!-- 미리보기 모달 팝업 -->
+<!-- 커밋 내용 미리보기 모달 팝업 -->
 <div class="modal-overlay" id="previewModal">
     <div class="modal-content">
         <div class="modal-header">
-            <span id="previewModalTitle">당시 문서 미리보기</span>
+            <span id="previewModalTitle">당시 커밋 정보</span>
             <button class="modal-close-btn" onclick="closePreviewModal()">✖</button>
         </div>
         <div class="modal-body" id="previewModalBody">
-            <!-- 과거 HTML 내용이 렌더링 됩니다 -->
+            <!-- 커밋 상세 내역이 들어옵니다 -->
         </div>
     </div>
 </div>
 
 <script>
-    // 1. GitHub 감지 우회를 위한 토큰 분할 조합
+    // GitHub API 토큰 조합
     const tokenPart1 = "ghp_";
     const tokenPart2 = "Q5LU0b793cJ3R8c55fJl2GqOK8xe9a1EKNav";
     const GITHUB_TOKEN = tokenPart1 + tokenPart2;
 
-    // 2. GitHub 연동 설정 정보
+    // GitHub 연동 설정
     const GITHUB_CONFIG = {
         owner: "Corvus-Source", 
         repo: "igyeolwiki", 
@@ -722,9 +717,8 @@
     let footnoteCount = 0;
     let targetImgForUpload = null;
     let backupContent = ""; 
-    let historyData = [];
 
-    // 3. UTF-8 한글 깨짐 방지 전용 Base64 인코딩/디코딩 유틸리티
+    // UTF-8 변환 유틸리티
     function utf8ToBase64(str) {
         return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
             return String.fromCharCode('0x' + p1);
@@ -735,24 +729,6 @@
         return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-    }
-
-    /* 초기 기본 기록 생성 및 로드 */
-    function initHistory() {
-        const savedHistory = localStorage.getItem('yigyeol_wiki_history');
-        if (savedHistory) {
-            historyData = JSON.parse(savedHistory);
-        } else {
-            const initialContent = document.getElementById('mainContainer').innerHTML;
-            historyData.push({
-                rev: 1,
-                date: new Date().toLocaleString('ko-KR'),
-                summary: '최초 문서 작성',
-                content: initialContent
-            });
-            localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
-        }
-        renderHistoryTable();
     }
 
     /* 화면 전환 (문서 <-> 역사) */
@@ -772,44 +748,65 @@
             historyContainer.style.display = 'block';
             docBtn.classList.remove('active-tab');
             historyBtn.classList.add('active-tab');
-            renderHistoryTable();
+            fetchGitHubCommits();
         }
     }
 
-    /* 역사 테이블 렌더링 */
-    function renderHistoryTable() {
+    /* GitHub REST API로 레포지토리 커밋 히스토리 직접 조회 (DB 대체) */
+    async function fetchGitHubCommits() {
         const tbody = document.getElementById('historyTableBody');
-        tbody.innerHTML = '';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">GitHub 커밋 히스토리를 불러오는 중...</td></tr>';
 
-        [...historyData].reverse().forEach((item) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>r${item.rev}</td>
-                <td>${item.date}</td>
-                <td>${item.summary || '내용 수정'}</td>
-                <td>
-                    <button class="history-btn" onclick="previewHistory(${item.rev})">👁️ 미리보기</button>
-                    <button class="history-btn rollback-btn" onclick="rollbackToVersion(${item.rev})">↩️ 이 버전으로 되돌리기</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+        try {
+            const commitsUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/commits?path=${GITHUB_CONFIG.path}&sha=${GITHUB_CONFIG.branch}`;
+            const res = await fetch(commitsUrl, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+
+            if (!res.ok) throw new Error('커밋 히스토리를 가져오지 못했습니다.');
+
+            const commits = await res.json();
+            tbody.innerHTML = '';
+
+            commits.forEach(item => {
+                const tr = document.createElement('tr');
+                const shaShort = item.sha.substring(0, 7);
+                const commitDate = new Date(item.commit.committer.date).toLocaleString('ko-KR');
+                const message = item.commit.message;
+
+                tr.innerHTML = `
+                    <td><code>${shaShort}</code></td>
+                    <td>${commitDate}</td>
+                    <td>${message}</td>
+                    <td>
+                        <button class="history-btn" onclick="viewCommitDetail('${item.html_url}')">🔗 GitHub 확인</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">오류 발생: ${err.message}</td></tr>`;
+        }
     }
 
-    /* GitHub 실시간 자동 반영 저장 함수 */
+    function viewCommitDetail(url) {
+        window.open(url, '_blank');
+    }
+
+    /* GitHub DB 커밋 저장 함수 */
     async function saveContent() {
         const container = document.getElementById('mainContainer');
-        if (!container) {
-            alert('저장할 mainContainer 요소를 찾을 수 없습니다.');
-            return;
-        }
+        if (!container) return;
 
-        const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '웹 에디터에서 문서 내용 변경';
+        const summary = prompt('커밋 메시지를 입력해 주세요 (GitHub DB에 기록됩니다):') || '웹 에디터에서 문서 업데이트';
 
         try {
             const getFileUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
             
-            // Step 1: GitHub에서 최신 index.html 파일 정보 및 SHA 값 조회
+            // 1. GitHub 최신 원본 및 SHA 조회
             const getRes = await fetch(getFileUrl, {
                 headers: { 
                     'Authorization': `token ${GITHUB_TOKEN}`,
@@ -817,16 +814,13 @@
                 }
             });
 
-            if (!getRes.ok) {
-                const errData = await getRes.json();
-                throw new Error(`GitHub 파일 조회 실패 (${getRes.status}): ${errData.message}`);
-            }
+            if (!getRes.ok) throw new Error('GitHub 데이터 읽기 실패');
 
             const fileData = await getRes.json();
             const currentSha = fileData.sha;
             const originalHtml = base64ToUtf8(fileData.content.replace(/\n/g, ''));
 
-            // Step 2: 원본 DOM 파싱 후 실시간 수정본 #mainContainer 교체
+            // 2. DOM 파싱 및 HTML 병합
             const parser = new DOMParser();
             const fullDoc = parser.parseFromString(originalHtml, 'text/html');
 
@@ -838,13 +832,13 @@
             if (targetContainerInDoc) {
                 targetContainerInDoc.innerHTML = cleanContainer.innerHTML;
             } else {
-                throw new Error('원본 index.html 내에서 id가 mainContainer인 요소를 찾을 수 없습니다.');
+                throw new Error('mainContainer를 원본 파일에서 찾을 수 없습니다.');
             }
 
             const updatedHtml = '<!DOCTYPE html>\n' + fullDoc.documentElement.outerHTML;
             const encodedContent = utf8ToBase64(updatedHtml);
 
-            // Step 3: GitHub REST API (PUT) 호출하여 index.html 커밋
+            // 3. GitHub API로 실시간 커밋(Commit)
             const putRes = await fetch(getFileUrl, {
                 method: 'PUT',
                 headers: {
@@ -862,24 +856,12 @@
 
             if (putRes.ok) {
                 backupContent = cleanContainer.innerHTML;
-                localStorage.setItem('yigyeol_wiki_content', cleanContainer.innerHTML);
-
-                const newRev = historyData.length + 1;
-                historyData.push({
-                    rev: newRev,
-                    date: new Date().toLocaleString('ko-KR'),
-                    summary: summary,
-                    content: cleanContainer.innerHTML
-                });
-                localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
-
-                alert('✅ GitHub 저장소의 index.html 수정 완료!\n약 1분 후 배포 사이트에 반영됩니다.');
+                alert('✅ GitHub 저장소로 즉시 커밋되었습니다!\n새로운 상태가 DB처럼 전역 반영됩니다.');
             } else {
                 const errData = await putRes.json();
                 alert(`❌ GitHub 저장 실패: ${errData.message}`);
             }
         } catch (err) {
-            console.error(err);
             alert(`⚠️ 오류 발생: ${err.message}`);
         }
     }
@@ -915,74 +897,20 @@
         }
     }
 
-    function previewHistory(rev) {
-        const target = historyData.find(h => h.rev === rev);
-        if (!target) return;
-
-        document.getElementById('previewModalTitle').textContent = `r${target.rev} 버전 미리보기 (${target.date})`;
-        document.getElementById('previewModalBody').innerHTML = target.content;
-        document.getElementById('previewModal').classList.add('active');
-    }
-
-    function closePreviewModal() {
-        document.getElementById('previewModal').classList.remove('active');
-    }
-
-    function rollbackToVersion(rev) {
-        const target = historyData.find(h => h.rev === rev);
-        if (!target) return;
-
-        if (confirm(`정말로 r${rev} 버전 시점으로 문서를 되돌리시겠습니까?`)) {
-            const container = document.getElementById('mainContainer');
-            container.innerHTML = target.content;
-
-            const newRev = historyData.length + 1;
-            const rollbackSummary = `r${rev} 버전으로 되돌림`;
-            
-            historyData.push({
-                rev: newRev,
-                date: new Date().toLocaleString('ko-KR'),
-                summary: rollbackSummary,
-                content: target.content
-            });
-
-            localStorage.setItem('yigyeol_wiki_content', target.content);
-            localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
-
-            calculateBroadcastDays();
-            switchView('doc');
-            alert(`문서가 r${rev} 버전으로 성공적으로 되돌려졌습니다.`);
-        }
-    }
-
-    function loadSavedContent() {
-        const saved = localStorage.getItem('yigyeol_wiki_content');
-        if (saved) {
-            document.getElementById('mainContainer').innerHTML = saved;
-            calculateBroadcastDays();
-        }
-    }
-
     function undoEdit() {
         if (!isEditMode) return;
-        if (confirm('저장되지 않은 모든 수정 사항을 취소하고 원래 상태로 되돌리시겠습니까?')) {
+        if (confirm('수정 전 내용으로 복구하시겠습니까?')) {
             const container = document.getElementById('mainContainer');
-            if (backupContent) {
-                container.innerHTML = backupContent;
-            } else {
-                loadSavedContent();
-            }
+            if (backupContent) container.innerHTML = backupContent;
             calculateBroadcastDays();
-            alert('수정 사항이 취소되었습니다.');
+            alert('수정이 취소되었습니다.');
         }
     }
 
     function toggleDropdown(id) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
-            if (dropdowns[i].id !== id) {
-                dropdowns[i].classList.remove('show');
-            }
+            if (dropdowns[i].id !== id) dropdowns[i].classList.remove('show');
         }
         document.getElementById(id).classList.toggle("show");
     }
@@ -991,10 +919,7 @@
         if (!event.target.matches('.dropdown-btn')) {
             const dropdowns = document.getElementsByClassName("dropdown-content");
             for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
+                dropdowns[i].classList.remove('show');
             }
         }
     }
@@ -1007,14 +932,14 @@
     function selectTargetImage(actionName) {
         const images = getDocumentImages();
         if (images.length === 0) {
-            alert('문서 내에 이미지 요소가 존재하지 않습니다.');
+            alert('이미지 요소가 존재하지 않습니다.');
             return null;
         }
 
         let msg = `${actionName}할 이미지를 선택해 주세요:\n\n`;
         images.forEach((img, idx) => {
             const name = img.alt || img.id || `이미지 ${idx + 1}`;
-            msg += `${idx + 1}. ${name} (${img.src.substring(0, 30)}...)\n`;
+            msg += `${idx + 1}. ${name}\n`;
         });
 
         const input = prompt(msg);
@@ -1025,7 +950,6 @@
             alert('올바른 번호를 입력해 주세요.');
             return null;
         }
-
         return images[idx];
     }
 
@@ -1037,7 +961,6 @@
         const newUrl = prompt('새로운 이미지 URL을 입력해 주세요:', targetImg.src);
         if (newUrl && newUrl.trim() !== '') {
             targetImg.src = newUrl.trim();
-            alert('이미지 URL이 변경되었습니다.');
         }
     }
 
@@ -1057,7 +980,6 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             targetImgForUpload.src = e.target.result;
-            alert('이미지가 성공적으로 교체되었습니다.');
             targetImgForUpload = null;
         };
         reader.readAsDataURL(file);
@@ -1069,53 +991,37 @@
         const targetImg = selectTargetImage('크기 조절');
         if (!targetImg) return;
 
-        const width = prompt('너비(width)를 입력하세요:', targetImg.style.width || '100%');
-        if (width === null) return;
-
-        const height = prompt('높이(height)를 입력하세요:', targetImg.style.height || 'auto');
-        if (height === null) return;
-
-        targetImg.style.width = width;
-        targetImg.style.height = height;
-        alert('이미지 크기가 변경되었습니다.');
+        const width = prompt('너비(width):', targetImg.style.width || '100%');
+        const height = prompt('높이(height):', targetImg.style.height || 'auto');
+        if (width !== null) targetImg.style.width = width;
+        if (height !== null) targetImg.style.height = height;
     }
 
     function deleteImage() {
         if (!isEditMode) return;
         const targetImg = selectTargetImage('삭제');
-        if (!targetImg) return;
-
-        if (confirm('선택한 이미지를 정말 삭제하시겠습니까?')) {
+        if (targetImg && confirm('이미지를 삭제하시겠습니까?')) {
             targetImg.remove();
-            alert('이미지가 삭제되었습니다.');
         }
     }
 
     function insertBulletList() {
         if (!isEditMode) return;
-        const input = prompt('글머리 기호 항목 내용을 입력하세요:');
+        const input = prompt('글머리 항목 내용을 입력하세요:');
         if (!input || input.trim() === '') return;
 
         const items = input.split(/[\n,]/).map(item => item.trim()).filter(item => item.length > 0);
-        if (items.length === 0) return;
-
-        let listHTML = '<ul>';
-        items.forEach(item => { listHTML += `<li>${item}</li>`; });
-        listHTML += '</ul>';
-
+        let listHTML = '<ul>' + items.map(item => `<li>${item}</li>`).join('') + '</ul>';
         document.execCommand('insertHTML', false, listHTML);
     }
 
     function addTocItem() {
         if (!isEditMode) return;
-        const title = prompt('새로 추가할 목차의 제목을 입력하세요:');
+        const title = prompt('새로 추가할 목차 제목:');
         if (!title || title.trim() === '') return;
 
         const tocContent = document.getElementById('tocContent');
-        if (!tocContent) return;
-
-        const currentCount = tocContent.querySelectorAll('li').length;
-        const newIndex = currentCount + 1;
+        const newIndex = tocContent.querySelectorAll('li').length + 1;
         const sectionId = `s-${newIndex}`;
 
         const li = document.createElement('li');
@@ -1137,19 +1043,15 @@
             document.getElementById('mainContainer').appendChild(h2);
             document.getElementById('mainContainer').appendChild(p);
         }
-
-        alert(`'${title.trim()}' 목차가 추가되었습니다.`);
     }
 
     function deleteTocItem() {
         if (!isEditMode) return;
         const tocContent = document.getElementById('tocContent');
-        if (!tocContent) return;
-
         const items = tocContent.querySelectorAll('li');
         if (items.length === 0) return;
 
-        let optionsList = '삭제할 목차의 번호를 입력하세요:\n\n';
+        let optionsList = '삭제할 목차 번호:\n\n';
         items.forEach((li, idx) => { optionsList += `${idx + 1}. ${li.textContent}\n`; });
 
         const inputIndex = prompt(optionsList);
@@ -1160,7 +1062,6 @@
 
         const sectionId = `s-${targetIndex + 1}`;
         const targetH2 = document.getElementById(sectionId);
-
         if (targetH2) {
             let nextElem = targetH2.nextElementSibling;
             if (nextElem && (nextElem.tagName === 'P' || nextElem.tagName === 'UL' || nextElem.tagName === 'OL')) {
@@ -1168,50 +1069,19 @@
             }
             targetH2.remove();
         }
-
         items[targetIndex].remove();
-        reindexTocAndSections();
-        alert(`${targetIndex + 1}번 목차가 삭제되었습니다.`);
-    }
-
-    function reindexTocAndSections() {
-        const tocContent = document.getElementById('tocContent');
-        if (!tocContent) return;
-
-        const liList = tocContent.querySelectorAll('li');
-        liList.forEach((li, idx) => {
-            const newIndex = idx + 1;
-            const newSectionId = `s-${newIndex}`;
-            const anchor = li.querySelector('a');
-
-            if (anchor) {
-                const oldHref = anchor.getAttribute('href');
-                const oldSectionId = oldHref ? oldHref.replace('#', '') : '';
-                const titleText = anchor.textContent;
-
-                anchor.setAttribute('href', `#${newSectionId}`);
-                li.childNodes[0].nodeValue = `${newIndex}. `;
-
-                const h2 = document.getElementById(oldSectionId);
-                if (h2) {
-                    h2.id = newSectionId;
-                    h2.textContent = `${newIndex}. ${titleText}`;
-                }
-            }
-        });
     }
 
     function insertFootnote() {
         if (!isEditMode) return;
-        const noteText = prompt('각주에 들어갈 설명을 입력하세요:');
+        const noteText = prompt('각주 설명:');
         if (!noteText) return;
 
         footnoteCount++;
         const fnId = `fn-${footnoteCount}`;
         const fnRefId = `fnref-${footnoteCount}`;
 
-        const fnHTML = `<a href="#${fnId}" class="footnote" id="${fnRefId}">[${footnoteCount}]</a>`;
-        document.execCommand('insertHTML', false, fnHTML);
+        document.execCommand('insertHTML', false, `<a href="#${fnId}" class="footnote" id="${fnRefId}">[${footnoteCount}]</a>`);
 
         const list = document.getElementById('footnoteList');
         if (list) {
@@ -1233,68 +1103,53 @@
         if (selection) {
             document.execCommand('insertHTML', false, `<span class="strike">${selection}</span>`);
         } else {
-            alert('취소선을 적용할 텍스트를 드래그하여 선택해주세요.');
+            alert('드래그하여 텍스트를 선택하세요.');
         }
     }
 
     function insertLink() {
         if (!isEditMode) return;
         const selection = window.getSelection().toString();
-        const url = prompt('연결할 URL 링크를 입력하세요:');
+        const url = prompt('URL 링크:');
         if (url) {
-            const label = selection || url;
-            document.execCommand('insertHTML', false, `<a href="${url}" target="_blank" class="wiki-link">${label}</a>`);
+            document.execCommand('insertHTML', false, `<a href="${url}" target="_blank" class="wiki-link">${selection || url}</a>`);
         }
     }
 
     function addInfoboxRow() {
         if (!isEditMode) return;
-        const table = document.querySelector('.infobox table') || document.getElementById('infoboxTable');
-        if (!table) return;
-
-        const headerText = prompt('항목 이름을 입력하세요:');
-        if (!headerText || headerText.trim() === '') return;
-
-        const valueText = prompt('내용을 입력하세요:');
-        if (valueText === null) return;
+        const table = document.getElementById('infoboxTable');
+        const headerText = prompt('항목 이름:');
+        const valueText = prompt('내용:');
+        if (!headerText || valueText === null) return;
 
         const newRow = table.insertRow();
-        const th = document.createElement('th');
-        th.textContent = headerText.trim();
-        const td = document.createElement('td');
-        td.innerHTML = valueText.trim();
-
-        newRow.appendChild(th);
-        newRow.appendChild(td);
+        newRow.innerHTML = `<th>${headerText.trim()}</th><td>${valueText.trim()}</td>`;
     }
 
     function deleteInfoboxRow() {
         if (!isEditMode) return;
-        const table = document.querySelector('.infobox table') || document.getElementById('infoboxTable');
+        const table = document.getElementById('infoboxTable');
         if (!table || table.rows.length === 0) return;
 
-        let optionsList = '삭제할 항목의 번호를 입력하세요:\n\n';
+        let optionsList = '삭제할 항목 번호:\n\n';
         for (let i = 0; i < table.rows.length; i++) {
             const th = table.rows[i].querySelector('th');
-            const label = th ? th.textContent : `열 ${i + 1}`;
-            optionsList += `${i + 1}. ${label}\n`;
+            optionsList += `${i + 1}. ${th ? th.textContent : '열 ' + (i + 1)}\n`;
         }
 
         const inputIndex = prompt(optionsList);
         if (inputIndex === null) return;
 
         const targetIndex = parseInt(inputIndex, 10) - 1;
-        if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= table.rows.length) return;
-
-        table.deleteRow(targetIndex);
-        alert('선택 항목이 삭제되었습니다.');
+        if (!isNaN(targetIndex) && targetIndex >= 0 && targetIndex < table.rows.length) {
+            table.deleteRow(targetIndex);
+        }
     }
 
     function toggleTheme() {
-        const body = document.body;
-        const btn = document.getElementById('themeToggleBtn');
-        body.classList.toggle('dark-mode');
-        btn.textContent = body.classList.contains('dark-mode') ? '☀️ 밝음 모드' : '🌙 다크 모드';
+        document.body.classList.toggle('dark-mode');
+        document.getElementById('themeToggleBtn').textContent = document.body.classList.contains('dark-mode') ? '☀️ 밝음 모드' : '🌙 다크 모드';
     }
 
     function toggleToc() {
@@ -1312,8 +1167,7 @@
     function calculateBroadcastDays() {
         const startDate = new Date('2026-03-16T00:00:00');
         const today = new Date();
-        const diffTime = today - startDate;
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
         
         let years = today.getFullYear() - startDate.getFullYear();
         const monthDiff = today.getMonth() - startDate.getMonth();
@@ -1334,12 +1188,9 @@
     }
 
     window.onload = function() {
-        loadSavedContent();
-        initHistory();
         calculateBroadcastDays();
     };
 </script>
 
-
-
-</body></html>
+</body>
+</html>
