@@ -712,9 +712,8 @@
     let footnoteCount = 0;
     let targetImgForUpload = null;
     let backupContent = ""; 
-    let historyData = []; // 역사 저장소
+    let historyData = [];
 
-    /* URL Hash에 내용을 인코딩하여 반영 및 복사 */
     function encodeToHash(data) {
         try {
             return encodeURIComponent(btoa(unescape(encodeURIComponent(data))));
@@ -731,7 +730,6 @@
         }
     }
 
-    /* 초기 기본 기록 생성 및 로드 */
     function initHistory() {
         const hash = window.location.hash.substring(1);
         let hashContent = null;
@@ -765,7 +763,6 @@
         renderHistoryTable();
     }
 
-    /* 화면 전환 (문서 <-> 역사) */
     function switchView(viewName) {
         const mainContainer = document.getElementById('mainContainer');
         const historyContainer = document.getElementById('historyContainer');
@@ -786,7 +783,6 @@
         }
     }
 
-    /* 역사 테이블 렌더링 */
     function renderHistoryTable() {
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '';
@@ -806,7 +802,7 @@
         });
     }
 
-    /* 저장 시 URL Hash 자동 저장 및 링크 클립보드 복사 */
+    /* 저장 버튼 클릭 시 API 호출 없이 URL Hash로 인코딩하여 저장 및 복사 */
     function saveContent() {
         const container = document.getElementById('mainContainer');
         const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '문서 내용 변경';
@@ -815,13 +811,11 @@
         localStorage.setItem('yigyeol_wiki_content', contentHtml);
         backupContent = contentHtml;
 
-        // URL Hash에 데이터 인코딩 후 브라우저 주소창 변경
         const encoded = encodeToHash(contentHtml);
         if (encoded) {
             window.location.hash = encoded;
         }
 
-        // 역사 객체 추가
         const newRev = historyData.length + 1;
         historyData.push({
             rev: newRev,
@@ -832,15 +826,17 @@
 
         localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
 
-        // 공유 가능한 URL을 자동 클립보드 복사
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            alert('변경사항이 성공적으로 저장되었으며, 타인에게 공유 가능한 수정본 링크가 클립보드에 복사되었습니다!\n주소창의 URL을 그대로 공유하셔도 됩니다.');
-        }).catch(() => {
-            alert('변경사항이 저장되었습니다. 공유하실 때에는 현재 브라우저 주소창 전체(URL)를 복사해서 공유해 주세요.');
-        });
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('변경사항이 저장되었으며, 수정본 주소가 클립보드에 복사되었습니다.\n주소창의 링크를 복사하여 타인에게 전달하세요.');
+            }).catch(() => {
+                alert('변경사항이 저장되었습니다. 주소창의 링크를 복사해 전달해 주세요.');
+            });
+        } else {
+            alert('변경사항이 저장되었습니다. 주소창의 링크를 복사해 전달해 주세요.');
+        }
     }
 
-    /* 당시 문서 미리보기 */
     function previewHistory(rev) {
         const target = historyData.find(h => h.rev === rev);
         if (!target) return;
@@ -854,7 +850,6 @@
         document.getElementById('previewModal').classList.remove('active');
     }
 
-    /* 당시 문서로 되돌리기 (롤백) */
     function rollbackToVersion(rev) {
         const target = historyData.find(h => h.rev === rev);
         if (!target) return;
@@ -887,7 +882,6 @@
         }
     }
 
-    /* 저장된 콘텐츠 로드 */
     function loadSavedContent() {
         const hash = window.location.hash.substring(1);
         if (hash) {
@@ -906,7 +900,6 @@
         }
     }
 
-    /* 수정 취소 */
     function undoEdit() {
         if (!isEditMode) return;
         if (confirm('저장되지 않은 모든 수정 사항을 취소하고 원래 상태로 되돌리시겠습니까?')) {
@@ -921,7 +914,6 @@
         }
     }
 
-    /* 툴바 및 서식 기능들 */
     function toggleDropdown(id) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
