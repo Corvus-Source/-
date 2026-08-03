@@ -559,7 +559,8 @@
             <button onclick="insertBulletList()">• 글머리 기호 추가</button>
             <button onclick="insertFootnote()">📌 각주 추가</button>
             <button onclick="insertHR()">➖ 구분선(바) 추가</button>
-            <button onclick="applyStrike()"><s>S</s> 취소선</button>
+            <button onclick="applyStrike()"><s>S</s> 취소선 적용</button>
+            <button onclick="removeStrike()">S 취소선 제거</button>
             <button onclick="insertLink()">🔗 링크 삽입</button>
         </div>
     </div>
@@ -661,7 +662,7 @@
     <h2 id="s-4">4. 여담</h2>
     <ul>
         <li>너구리에 계란을 넣어 먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥거리는 일이 있었다.</li>
-        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li><li>어릴 적 트라우마로 인하여 너무 무섭거나 너무 고어적인 게임은 하지 못한다고 방송 중에 밝힌 적이 있다.</li><li>3D멀미가 심한 편이다. 마크도 1인칭으로 오래하면 멀미가 날 정도라고 한다.</li><li>트라우마로 인하여 오이를 먹지 못 한다. 외에도 야채를 매우 싫어하여 가지,고추,당근,피망 등등 절대 야채를 먹지 않는다.<br></li><li><span class="strike">방문일정표 지각이 잦다</span></li><li><span class="strike">백과 콩나무에서 전과 189범으로 감옥 1위를 달성했다.</span></li></ul>
+        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li><li>어릴 적 트라우마로 인하여 너무 무섭거나 너무 고어적인 게임은 하지 못한다고 방송 중에 밝힌 적이 있다.</li><li>3D멀미가 심한 편이다. 마크도 1인칭으로 오래하면 멀미가 날 정도라고 한다.</li><li>트라우마로 인하여 오이를 먹지 못 한다. 외에도 야채를 매우 싫어하여 가지,고추,당근,피망 등등 절대 야채를 먹지 않는다.<br></li><li><span class="strike">방문일정표 지각이 잦다</span></li></ul>
 
     <div class="clear"></div>
 </div>
@@ -1166,11 +1167,43 @@
 
     function applyStrike() {
         if (!isEditMode) return;
-        const selection = window.getSelection().toString();
-        if (selection) {
-            document.execCommand('insertHTML', false, `<span class="strike">${selection}</span>`);
-        } else {
+        const selection = window.getSelection();
+        if (!selection.rangeCount || selection.isCollapsed) {
             alert('드래그하여 텍스트를 선택하세요.');
+            return;
+        }
+        document.execCommand('insertHTML', false, `<span class="strike">${selection.toString()}</span>`);
+    }
+
+    function removeStrike() {
+        if (!isEditMode) return;
+        const selection = window.getSelection();
+        if (!selection.rangeCount || selection.isCollapsed) {
+            alert('취소선을 제거할 텍스트를 드래그하여 선택하세요.');
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        
+        let parentSpan = container.nodeType === 3 ? container.parentElement : container;
+        while (parentSpan && !parentSpan.classList?.contains('strike') && parentSpan.id !== 'mainContainer') {
+            parentSpan = parentSpan.parentElement;
+        }
+
+        if (parentSpan && parentSpan.classList?.contains('strike')) {
+            const textNode = document.createTextNode(parentSpan.innerText);
+            parentSpan.parentNode.replaceChild(textNode, parentSpan);
+        } else {
+            const fragment = range.cloneContents();
+            const strikeElems = fragment.querySelectorAll('.strike');
+            if (strikeElems.length > 0) {
+                document.execCommand('strikeThrough', false, null);
+                const selectedText = selection.toString();
+                document.execCommand('insertHTML', false, selectedText);
+            } else {
+                alert('선택한 위치에 제거할 취소선이 없습니다.');
+            }
         }
     }
 
@@ -1258,6 +1291,5 @@
         calculateBroadcastDays();
     };
 </script>
-
 
 </body></html>
