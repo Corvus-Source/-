@@ -775,25 +775,53 @@
         });
     }
 
-    /* 저장 시 역사 데이터 추가 */
-    function saveContent() {
+    /* GitHub API를 통한 저장소 직접 업데이트 함수 */
+    async function saveContent() {
         const container = document.getElementById('mainContainer');
-        const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '문서 내용 변경';
+        const summary = prompt('수정 요약을 입력해 주세요:') || '문서 내용 변경';
 
-        localStorage.setItem('yigyeol_wiki_content', container.innerHTML);
-        backupContent = container.innerHTML;
+        // 1. 저장할 전체 HTML 구성
+        const updatedHTML = `<!DOCTYPE html>\n` + document.documentElement.outerHTML;
 
-        // 역사 객체 추가
-        const newRev = historyData.length + 1;
-        historyData.push({
-            rev: newRev,
-            date: new Date().toLocaleString('ko-KR'),
-            summary: summary,
-            content: container.innerHTML
-        });
+        // 2. GitHub 설정 정보 (토큰은 보안에 주의)
+        const GITHUB_TOKEN = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"; // GitHub에서 발급받은 Personal Access Token
+        const OWNER = "corvus-source";
+        const REPO = "corvus-source.github.io"; // 또는 해당 레포지토리 이름
+        const PATH = "index.html"; // 또는 해당 파일 경로
 
-        localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
-        alert('변경사항과 편집 역사가 성공적으로 저장되었습니다.');
+        try {
+            // 기존 파일의 SHA 값 가져오기 (GitHub API 필수 과정)
+            const getFileRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`);
+            const fileData = await getFileRes.json();
+            const sha = fileData.sha;
+
+            // Base64 인코딩 (UTF-8 대응)
+            const encodedContent = btoa(unescape(encodeURIComponent(updatedHTML)));
+
+            // GitHub API로 Commit 생성
+            const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: summary,
+                    content: encodedContent,
+                    sha: sha
+                })
+            });
+
+            if (response.ok) {
+                alert('GitHub 저장소에 성공적으로 반영되었습니다! (배포까지 1~2분 소요될 수 있습니다)');
+            } else {
+                const errData = await response.json();
+                alert('저장 실패: ' + errData.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('저장 중 오류가 발생했습니다.');
+        }
     }
 
     /* 당시 문서 미리보기 */
