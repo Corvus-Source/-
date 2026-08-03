@@ -708,49 +708,27 @@
 </div>
 
 <script>
+    // GitHub 연동 설정 정보 (본인의 레포지토리 정보에 맞게 수정하세요)
+    const GITHUB_CONFIG = {
+        owner: "Corvus-Source", 
+        repo: "-",              
+        path: "index.html",     
+        branch: "main"
+    };
+
     let isEditMode = false;
     let footnoteCount = 0;
     let targetImgForUpload = null;
     let backupContent = ""; 
-    let historyData = [];
+    let historyData = []; // 역사 저장소
 
-    function encodeToHash(data) {
-        try {
-            return encodeURIComponent(btoa(unescape(encodeURIComponent(data))));
-        } catch(e) {
-            return "";
-        }
-    }
-
-    function decodeFromHash(hash) {
-        try {
-            return decodeURIComponent(escape(atob(decodeURIComponent(hash))));
-        } catch(e) {
-            return null;
-        }
-    }
-
+    /* 초기 기본 기록 생성 및 로드 */
     function initHistory() {
-        const hash = window.location.hash.substring(1);
-        let hashContent = null;
-        
-        if (hash) {
-            hashContent = decodeFromHash(hash);
-        }
-
-        if (hashContent) {
-            document.getElementById('mainContainer').innerHTML = hashContent;
-        } else {
-            const saved = localStorage.getItem('yigyeol_wiki_content');
-            if (saved) {
-                document.getElementById('mainContainer').innerHTML = saved;
-            }
-        }
-
         const savedHistory = localStorage.getItem('yigyeol_wiki_history');
         if (savedHistory) {
             historyData = JSON.parse(savedHistory);
         } else {
+            // 최초 기록 저장
             const initialContent = document.getElementById('mainContainer').innerHTML;
             historyData.push({
                 rev: 1,
@@ -763,6 +741,7 @@
         renderHistoryTable();
     }
 
+    /* 화면 전환 (문서 <-> 역사) */
     function switchView(viewName) {
         const mainContainer = document.getElementById('mainContainer');
         const historyContainer = document.getElementById('historyContainer');
@@ -783,10 +762,12 @@
         }
     }
 
+    /* 역사 테이블 렌더링 */
     function renderHistoryTable() {
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '';
 
+        // 최근 역사가 위로 오도록 역순 출력
         [...historyData].reverse().forEach((item) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -802,41 +783,86 @@
         });
     }
 
-    /* 저장 버튼 클릭 시 API 호출 없이 URL Hash로 인코딩하여 저장 및 복사 */
-    function saveContent() {
+    /* 저장 시 GitHub API를 통해 레포지토리 파일 업데이트 (자동 저장된 토큰 활용) */
+    async function saveContent() {
         const container = document.getElementById('mainContainer');
         const summary = prompt('수정 요약을 입력해 주세요 (선택사항):') || '문서 내용 변경';
+        
+        // 로컬 저장소에서 토큰 자동 불러오기
+        let token = localStorage.getItem('github_token');
 
-        const contentHtml = container.innerHTML;
-        localStorage.setItem('yigyeol_wiki_content', contentHtml);
-        backupContent = contentHtml;
-
-        const encoded = encodeToHash(contentHtml);
-        if (encoded) {
-            window.location.hash = encoded;
+        // 저장된 토큰이 없을 경우에만 입력 요청
+        if (!token) {
+            token = prompt('GitHub Access Token을 입력하세요:');
+            if (token && token.trim() !== '') {
+                localStorage.setItem('github_token', token.trim());
+            } else {
+                alert('토큰이 입력되지 않아 저장이 취소되었습니다.');
+                return;
+            }
         }
 
-        const newRev = historyData.length + 1;
-        historyData.push({
-            rev: newRev,
-            date: new Date().toLocaleString('ko-KR'),
-            summary: summary,
-            content: contentHtml
-        });
-
-        localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
-
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('변경사항이 저장되었으며, 수정본 주소가 클립보드에 복사되었습니다.\n주소창의 링크를 복사하여 타인에게 전달하세요.');
-            }).catch(() => {
-                alert('변경사항이 저장되었습니다. 주소창의 링크를 복사해 전달해 주세요.');
+        try {
+            // 1. 현재 GitHub에 있는 파일의 최신 SHA 값 및 전체 HTML 가져오기
+            const getFileUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+            const getRes = await fetch(getFileUrl, {
+                headers: { 'Authorization': `token ${token}` }
             });
-        } else {
-            alert('변경사항이 저장되었습니다. 주소창의 링크를 복사해 전달해 주세요.');
+            
+            if (!getRes.ok) throw new Error('파일 정보 조회 실패 (토큰 권한을 확인해 주세요)');
+            const fileData = await getRes.json();
+            const currentSha = fileData.sha;
+
+            // 2. 전체 HTML 문서에서 #mainContainer 영역을 현재 편집된 내용으로 교체
+            const parser = new DOMParser();
+            const fullDoc = parser.parseFromString(decodeURIComponent(escape(atob(fileData.content))), 'text/html');
+            fullDoc.getElementById('mainContainer').innerHTML = container.innerHTML;
+            
+            // 3. 변경된 전체 HTML을 Base64 인코딩
+            const updatedHtml = '<!DOCTYPE html>\n' + fullDoc.documentElement.outerHTML;
+            const encodedContent = btoa(unescape(encodeURIComponent(updatedHtml)));
+
+            // 4. GitHub API PUT 요청으로 파일 업로드 및 커밋
+            const putRes = await fetch(getFileUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: summary,
+                    content: encodedContent,
+                    sha: currentSha,
+                    branch: GITHUB_CONFIG.branch
+                })
+            });
+
+            if (putRes.ok) {
+                // 로컬 내역 업데이트
+                localStorage.setItem('yigyeol_wiki_content', container.innerHTML);
+                backupContent = container.innerHTML;
+
+                const newRev = historyData.length + 1;
+                historyData.push({
+                    rev: newRev,
+                    date: new Date().toLocaleString('ko-KR'),
+                    summary: summary,
+                    content: container.innerHTML
+                });
+                localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
+
+                alert('GitHub에 성공적으로 저장되었습니다!\n약 1분 후 사이트에 수정한 내용이 자동으로 반영됩니다.');
+            } else {
+                const errData = await putRes.json();
+                alert(`저장 실패: ${errData.message}`);
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`오류 발생: ${err.message}`);
         }
     }
 
+    /* 당시 문서 미리보기 */
     function previewHistory(rev) {
         const target = historyData.find(h => h.rev === rev);
         if (!target) return;
@@ -850,6 +876,7 @@
         document.getElementById('previewModal').classList.remove('active');
     }
 
+    /* 당시 문서로 되돌리기 (롤백) */
     function rollbackToVersion(rev) {
         const target = historyData.find(h => h.rev === rev);
         if (!target) return;
@@ -871,28 +898,14 @@
             localStorage.setItem('yigyeol_wiki_content', target.content);
             localStorage.setItem('yigyeol_wiki_history', JSON.stringify(historyData));
 
-            const encoded = encodeToHash(target.content);
-            if (encoded) {
-                window.location.hash = encoded;
-            }
-
             calculateBroadcastDays();
             switchView('doc');
             alert(`문서가 r${rev} 버전으로 성공적으로 되돌려졌습니다.`);
         }
     }
 
+    /* 저장된 콘텐츠 로드 */
     function loadSavedContent() {
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-            const decoded = decodeFromHash(hash);
-            if (decoded) {
-                document.getElementById('mainContainer').innerHTML = decoded;
-                calculateBroadcastDays();
-                return;
-            }
-        }
-
         const saved = localStorage.getItem('yigyeol_wiki_content');
         if (saved) {
             document.getElementById('mainContainer').innerHTML = saved;
@@ -900,6 +913,7 @@
         }
     }
 
+    /* 수정 취소 */
     function undoEdit() {
         if (!isEditMode) return;
         if (confirm('저장되지 않은 모든 수정 사항을 취소하고 원래 상태로 되돌리시겠습니까?')) {
@@ -914,6 +928,7 @@
         }
     }
 
+    /* 툴바 및 서식 기능들 */
     function toggleDropdown(id) {
         const dropdowns = document.getElementsByClassName("dropdown-content");
         for (let i = 0; i < dropdowns.length; i++) {
@@ -936,6 +951,7 @@
         }
     }
 
+    /* 편집 모드 토글 (요청하신 자동 토큰 저장 로직 적용 위치) */
     function toggleEditMode() {
         const container = document.getElementById('mainContainer');
         const devBtn = document.getElementById('devCodeBtn');
@@ -944,6 +960,17 @@
         if (!isEditMode) {
             const inputCode = prompt('개발진 코드를 입력하세요:');
             if (inputCode === 'C8972d') {
+                // 저장된 토큰 확인 및 입력 받아 로컬 저장소에 저장
+                let savedToken = localStorage.getItem('github_token');
+                if (!savedToken) {
+                    savedToken = prompt('GitHub Access Token을 입력하세요 (최초 1회 저장):');
+                    if (savedToken && savedToken.trim() !== '') {
+                        localStorage.setItem('github_token', savedToken.trim());
+                    } else {
+                        alert('토큰이 입력되지 않아 일반 수정 모드로 진입합니다.');
+                    }
+                }
+
                 isEditMode = true;
                 backupContent = container.innerHTML;
                 container.contentEditable = "true";
