@@ -451,6 +451,14 @@
             background-color: var(--namu-light-green);
         }
 
+        .history-btn.revert-btn {
+            background-color: #d81b60;
+        }
+
+        .history-btn.revert-btn:hover {
+            background-color: #c2185b;
+        }
+
         /* 미리보기 모달 팝업 */
         .modal-overlay {
             display: none;
@@ -566,7 +574,7 @@
 
     <div class="action-btns-group">
         <button class="edit-tool-btn undo-btn" onclick="undoEdit()">↩️ 수정 취소</button>
-        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 변경사항 저장</button>
+        <button class="edit-tool-btn save-btn" onclick="saveContent()">💾 GitHub에 즉시 커밋</button>
     </div>
 </div>
 
@@ -631,6 +639,7 @@
         </ul>
     </div>
 
+    <!-- 목차와 개요 사이에 clear 구문을 추가하여 1. 개요부터 프로필 인포복스 밑으로 떨어지도록 설정 -->
     <div class="clear"></div>
 
     <h2 id="s-1">1. 개요</h2>
@@ -668,10 +677,10 @@
     <table class="history-table">
         <thead>
             <tr>
-                <th style="width: 20%;">커밋 해시</th>
-                <th style="width: 25%;">수정 시각</th>
-                <th style="width: 40%;">커밋 메시지</th>
-                <th style="width: 15%;">상세보기</th>
+                <th style="width: 15%;">커밋 해시</th>
+                <th style="width: 20%;">수정 시각</th>
+                <th style="width: 35%;">커밋 메시지</th>
+                <th style="width: 30%;">상세보기</th>
             </tr>
         </thead>
         <tbody id="historyTableBody">
@@ -746,7 +755,7 @@
         }
     }
 
-    /* GitHub REST API로 레포지토리 커밋 히스토리 직접 조회 (DB 대체) */
+    /* GitHub REST API로 레포지토리 커밋 히스토리 직접 조회 */
     async function fetchGitHubCommits() {
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">GitHub 커밋 히스토리를 불러오는 중...</td></tr>';
@@ -776,7 +785,8 @@
                     <td>${commitDate}</td>
                     <td>${message}</td>
                     <td>
-                        <button class="history-btn" onclick="viewCommitDetail('${item.html_url}')">🔗 GitHub 확인</button>
+                        <button class="history-btn" onclick="previewCommit('${item.sha}', '${message}')">👁️ 미리보기</button>
+                        <button class="history-btn revert-btn" onclick="revertToCommit('${item.sha}')">↩️ 되돌리기</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -786,8 +796,71 @@
         }
     }
 
-    function viewCommitDetail(url) {
-        window.open(url, '_blank');
+    /* 커밋 데이터 미리보기 modal 생성 함수 */
+    async function previewCommit(sha, message) {
+        const modal = document.getElementById('previewModal');
+        const modalTitle = document.getElementById('previewModalTitle');
+        const modalBody = document.getElementById('previewModalBody');
+
+        modalTitle.textContent = `커밋 미리보기 (${sha.substring(0, 7)})`;
+        modalBody.innerHTML = '<p style="text-align:center;">당시 문서를 불러오는 중...</p>';
+        modal.classList.add('active');
+
+        try {
+            const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${sha}/${GITHUB_CONFIG.path}`;
+            const res = await fetch(rawUrl);
+            if (!res.ok) throw new Error('해당 커밋의 파일을 불러올 수 없습니다.');
+
+            const htmlText = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            const targetContent = doc.getElementById('mainContainer');
+
+            if (targetContent) {
+                modalBody.innerHTML = `
+                    <div style="background:#f0f4f4; padding:10px; margin-bottom:15px; border-radius:4px; font-size:0.9rem; color:#333;">
+                        <strong>커밋 메시지:</strong> ${message}
+                    </div>
+                    <div>${targetContent.innerHTML}</div>
+                `;
+            } else {
+                modalBody.innerHTML = '<p style="color:red;">문서 컨텐츠를 읽어올 수 없습니다.</p>';
+            }
+        } catch (err) {
+            modalBody.innerHTML = `<p style="color:red;">오류 발생: ${err.message}</p>`;
+        }
+    }
+
+    function closePreviewModal() {
+        document.getElementById('previewModal').classList.remove('active');
+    }
+
+    /* 특정 커밋 버전으로 문서 내용 되돌리기 */
+    async function revertToCommit(sha) {
+        if (!confirm(`해당 커밋(${sha.substring(0, 7)}) 버전으로 문서를 되돌리시겠습니까?`)) return;
+
+        try {
+            const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${sha}/${GITHUB_CONFIG.path}`;
+            const res = await fetch(rawUrl);
+            if (!res.ok) throw new Error('해당 커밋 데이터를 읽어올 수 없습니다.');
+
+            const htmlText = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            const targetContent = doc.getElementById('mainContainer');
+
+            if (targetContent) {
+                const mainContainer = document.getElementById('mainContainer');
+                mainContainer.innerHTML = targetContent.innerHTML;
+                calculateBroadcastDays();
+                switchView('doc');
+                alert(`✅ 커밋(${sha.substring(0, 7)}) 상태로 문서 내용이 복원되었습니다.\n변경 내용을 반영하려면 [개발진 코드]를 활성화하여 GitHub에 저장하세요.`);
+            } else {
+                alert('❌ 해당 커밋에서 본문 컨텐츠를 찾을 수 없습니다.');
+            }
+        } catch (err) {
+            alert(`⚠️ 복원 실패: ${err.message}`);
+        }
     }
 
     /* GitHub DB 커밋 저장 함수 */
