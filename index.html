@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko"><head>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>윤이결 - 이결위키</title>
@@ -580,20 +581,18 @@
 
 <!-- 1. 메인 문서 뷰 컨테이너 -->
 <div class="container" id="mainContainer">
-    <!-- 문서 제목 -->
     <div class="doc-title">
         <span>윤이결</span>
         <span class="category">분류: SOOP 스트리머</span>
     </div>
 
-    <!-- 인포복스 (오른쪽 프로필 상자) -->
     <div class="infobox">
         <div class="infobox-header">스트리머 프로필</div>
         <div class="infobox-image">
-            <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지">
+            <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지" id="profileImg">
         </div>
-        <table>
-            <tbody><tr>
+        <table id="infoboxTable">
+            <tr>
                 <th>이름</th>
                 <td>윤이결</td>
             </tr>
@@ -611,7 +610,7 @@
             </tr>
             <tr>
                 <th>첫 방송일</th>
-                <td>2026년 3월 16일 <span id="firstBroadcastDays">(+141일)</span></td>
+                <td>2026년 3월 16일 <span id="firstBroadcastDays"></span></td>
             </tr>
             <tr>
                 <th>주요 콘텐츠</th>
@@ -621,10 +620,9 @@
                 <th>팬덤명</th>
                 <td>먼지단</td>
             </tr>
-        </tbody></table>
+        </table>
     </div>
 
-    <!-- 개요 및 목차 -->
     <p>
         <a href="https://www.sooplive.com" class="wiki-link">SOOP</a>에서 활동하는 대한민국 스트리머. <span class="strike">주로 수다를 떨거나 억까를 당하는 것이 콘텐츠다.</span>
     </p>
@@ -638,12 +636,13 @@
             <li>1. <a href="#s-1">개요</a></li>
             <li>2. <a href="#s-2">방송 특징</a></li>
             <li>3. <a href="#s-3">주요 콘텐츠</a></li>
-            <li>4. <a href="#s-4">여담</a></li></ul>
+            <li>4. <a href="#s-4">여담</a></li>
+        </ul>
     </div>
 
-    <!-- 본문 내용 -->
     <h2 id="s-1">1. 개요</h2>
-    <p><a href="https://www.sooplive.com/station/khaea218/vod" target="_blank" class="wiki-link">SOOP</a>에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
+    <p>
+        SOOP에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
     </p>
 
     <h2 id="s-2">2. 방송 특징</h2>
@@ -662,7 +661,12 @@
     <h2 id="s-4">4. 여담</h2>
     <ul>
         <li>너구리에 계란을 넣어먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥거리는 일이 있었다.</li>
-        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li><li>과거 트라우마로 인하여 매우 무서운 것과 잔인한 것들을 볼 수 없다고 방송 중에 밝힌 적이 있다. 이러한 사유로 공포 게임을 고르거나 영화를 시청할 때 제한이 있다.</li></ul>
+        <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li>
+    </ul>
+
+    <div class="footnotes-section" id="footnotesSection">
+        <ol id="footnoteList"></ol>
+    </div>
 
     <div class="clear"></div>
 </div>
@@ -1305,6 +1309,5 @@
     };
 </script>
 
-
-
-</body></html>
+</body>
+</html>
