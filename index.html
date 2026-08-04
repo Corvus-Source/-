@@ -650,7 +650,8 @@
             <img src="https://i.ifh.cc/ZPSm2k.jpg" alt="윤이결 프로필 이미지" id="profileImg">
         </div>
         <table id="infoboxTable">
-            <tbody><tr>
+            <tbody>
+            <tr>
                 <th>이름</th>
                 <td>윤이결</td>
             </tr>
@@ -678,7 +679,12 @@
                 <th>팬덤명</th>
                 <td>먼지단</td>
             </tr>
-        <tr><th>MBTI</th><td>ENFP</td></tr></tbody></table>
+            <tr>
+                <th>MBTI</th>
+                <td>ENFP</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <p>
@@ -694,29 +700,119 @@
             <li>1. <a href="#s-1">개요</a></li>
             <li>2. <a href="#s-2">방송 특징</a></li>
             <li>3. <a href="#s-3">주요 콘텐츠</a></li>
-            <li>4. <a href="https://corvus-source.github.io/igyeolwiki/#s-5" style="color: rgb(0, 130, 117);">플레이 한 게임</a></li><li>5. <a href="#s-6">참여한 서버</a></li><li>6. <a href="#s-7">여담</a></li></ul>
+            <li>4. <a href="#s-4">플레이 한 게임</a></li>
+            <li>5. <a href="#s-5">참여한 마크 서버</a></li>
+            <li>6. <a href="#s-6">여담</a></li>
+        </ul>
     </div>
 
-    <!-- 목차와 개요 사이에 clear 구문을 추가하여 1. 개요부터 프로필 인포복스 밑으로 떨어지도록 설정 -->
     <div class="clear"></div>
 
-    <h2 id="s-1">1. 개요</h2>
-    <p>
-        SOOP에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
-    </p>
+    <!-- 1. 개요 -->
+    <h2 id="s-1" onclick="toggleSection('s-1')">
+        <span>1. 개요</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <p>
+            SOOP에서 활동하는 인터넷 방송인. 2026년 3월 16일 첫 방송을 시작으로 다양한 게임과 다채로운 소통 방송을 선보이고 있다.
+        </p>
+    </div>
 
-    <h2 id="s-2">2. 방송 특징</h2>
-    <p>주로 저녁부터 새벽까지 방송한다.&nbsp;<span class="strike">낮뱅 전환 선언을 하기는 했다.</span>&nbsp;방송 내내 수많은 억까를 당하여 비명 지르는 일이 많다.&nbsp;방송 중 나비가 매우 심하다. 이로 인하여 방종 크레딧을 본 이후에도 수다를 떨다가 적게는 몇십 분 많게는 몇 시간을 더 방송하기도 한다.</p>
+    <!-- 2. 방송 특징 -->
+    <h2 id="s-2" onclick="toggleSection('s-2')">
+        <span>2. 방송 특징</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <p>주로 저녁부터 새벽까지 방송한다.&nbsp;<span class="strike">낮뱅 전환 선언을 하기는 했다.</span>&nbsp;방송 내내 수많은 억까를 당하여 비명 지르는 일이 많다.&nbsp;방송 중 나비가 매우 심하다. 이로 인하여 방종 크레딧을 본 이후에도 수다를 떨다가 적게는 몇십 분 많게는 몇 시간을 더 방송하기도 한다.</p>
+    </div>
 
-    <h2 id="s-3">3. 주요 콘텐츠</h2>
-    <ul>
-        <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀과 같은 사이트도 이용한다.</li>
-        <li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
-        <li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈 한 서버로는 마인짐이 있다.</li>
-        <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동 게임을 한다.</li>
-    </ul>
+    <!-- 3. 주요 콘텐츠 -->
+    <h2 id="s-3" onclick="toggleSection('s-3')">
+        <span>3. 주요 콘텐츠</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <ul>
+            <li><b>소통:</b> 시청자들과 다양한 주제로 소통을 진행한다. 마추기 아이오 또는 이상형 월드컵, 꼬맨틀과 같은 사이트도 이용한다.</li>
+            <li><b>배틀그라운드:</b> 마인크래프트 다음으로 많이 하는 게임이며 주 컨텐츠 중 하나다. 솔로 게임은 무섭다며 거의 하지 않고 합방으로 진행하는 경우가 많다. 자칭 배악귀라고 말은 하지만 타칭으로도 배악귀가 맞다.</li>
+            <li><b>마인크래프트:</b> 방송 중 가장 큰 지분을 차지하는 게임이며 주 컨텐츠다. 백과콩나무, 지수의 꿈, 그냥서버 등등 많은 서버를 즐겨왔다. 보통 서버에서 플레이를 하는 모습보다는 감옥에서 광질 하는 모습을 심심치 않게 볼 수 있다. 직접 관리자로 오픈 한 서버로는 마인짐이 있다.</li>
+            <li><b>종합 게임:</b> 공포 게임을 제외한 게임들을 진행하며 주로 추리 게임이나 협동 게임을 한다.</li>
+        </ul>
+    </div>
 
-    <h2 id="s-4"><span style="font-size: 1.5rem;">4. 플레이 한 게임</span></h2><ul><li>마인크래프트</li><li>배틀그라운드</li><li>UNDUSTED</li><li>수박게임</li><li>ZORT</li><li>The Room</li><li>Super Battle Golf</li><li>Subnautica 2</li><li>메챠 카멜레온</li><li>Duck Detective : The Secret Salami</li><li>팰월드</li><li>Fruit Mountain</li><li>Duck Detective : The Ghost of Glamping</li><li>Staffer Retro</li><li>Staffer Case</li><li>가리사니 흥신소</li></ul><h2 id="s-6">5. 참여한 마크 서버</h2><ul><li>TNT서버<br></li><li>린코레일</li><li>마인짐(섭주)</li><li>캔디크러쉬 2</li><li>다이아시티</li><li>다뿌서버</li><li>그냥서버</li><li>지수의 꿈</li><li>인타임 2 테스트 서버</li><li>백과 콩나무<a href="#fn-1" class="footnote" id="fnref-1">[1]</a></li></ul><h2 id="s-7">6. 여담</h2><ul><li>너구리에 계란을 넣어 먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥 거리는 일이 있었다.</li><li>너구리 순한 맛은 먹지 않지만 진라면 순한 맛은 먹는다고 한다.</li><li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link" style="color: rgb(0, 130, 117);">수박 게임</a>을 매우 잘한다.</li><li>어릴 적 트라우마로 인하여 너무 무섭거나 너무 고어적인 게임은 하지 못한다고 방송 중에 밝힌 적이 있다.</li><li>3D멀미가 심한 편이다. 마크도 1인칭으로 오래하면 멀미가 날 정도라고 한다.</li><li>트라우마로 인하여 오이를 먹지 못 한다. 외에도 야채를 매우 싫어하여 가지,고추,당근,피망 등등 절대 야채를 먹지 않는다.<br></li><li><span class="strike" style="color: rgb(170, 170, 170);">방문일정표 지각이 잦다</span></li><li>백과 콩나무에서 전과 180범을 달성했다.</li></ul></div>
+    <!-- 4. 플레이 한 게임 -->
+    <h2 id="s-4" onclick="toggleSection('s-4')">
+        <span>4. 플레이 한 게임</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <ul>
+            <li>마인크래프트</li>
+            <li>배틀그라운드</li>
+            <li>UNDUSTED</li>
+            <li>수박게임</li>
+            <li>ZORT</li>
+            <li>The Room</li>
+            <li>Super Battle Golf</li>
+            <li>Subnautica 2</li>
+            <li>메챠 카멜레온</li>
+            <li>Duck Detective : The Secret Salami</li>
+            <li>팰월드</li>
+            <li>Fruit Mountain</li>
+            <li>Duck Detective : The Ghost of Glamping</li>
+            <li>Staffer Retro</li>
+            <li>Staffer Case</li>
+            <li>가리사니 흥신소</li>
+        </ul>
+    </div>
+
+    <!-- 5. 참여한 마크 서버 -->
+    <h2 id="s-5" onclick="toggleSection('s-5')">
+        <span>5. 참여한 마크 서버</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <ul>
+            <li>TNT서버</li>
+            <li>린코레일</li>
+            <li>마인짐(섭주)</li>
+            <li>캔디크러쉬 2</li>
+            <li>다이아시티</li>
+            <li>다뿌서버</li>
+            <li>그냥서버</li>
+            <li>지수의 꿈</li>
+            <li>인타임 2 테스트 서버</li>
+            <li>백과 콩나무<a href="#fn-1" class="footnote" id="fnref-1" title="전과 189범으로 감옥 한정 서버 1위 달성">[1]</a></li>
+        </ul>
+    </div>
+
+    <!-- 6. 여담 -->
+    <h2 id="s-6" onclick="toggleSection('s-6')">
+        <span>6. 여담</span>
+        <span class="section-toggle-btn">[접기]</span>
+    </h2>
+    <div class="section-content">
+        <ul>
+            <li>너구리에 계란을 넣어 먹으며 다시마는 먹지 않는다. 짜파게티 속 후레이크 또한 먹지 않는다. 이로 인하여 방송 중 시청자들과 투닥 거리는 일이 있었다.</li>
+            <li>너구리 순한 맛은 먹지 않지만 진라면 순한 맛은 먹는다고 한다.</li>
+            <li><a href="https://playsuikagame.com/ko" target="_blank" class="wiki-link">수박 게임</a>을 매우 잘한다.</li>
+            <li>어릴 적 트라우마로 인하여 너무 무섭거나 너무 고어적인 게임은 하지 못한다고 방송 중에 밝힌 적이 있다.</li>
+            <li>3D멀미가 심한 편이다. 마크도 1인칭으로 오래하면 멀미가 날 정도라고 한다.</li>
+            <li>트라우마로 인하여 오이를 먹지 못 한다. 외에도 야채를 매우 싫어하여 가지,고추,당근,피망 등등 절대 야채를 먹지 않는다.</li>
+            <li><span class="strike">방문일정표 지각이 잦다</span></li>
+        </ul>
+    </div>
+
+    <!-- 문서 하단 각주 영역 -->
+    <div class="footnotes-section" id="footnotesSection">
+        <h3>각주</h3>
+        <ol class="footnotes-list" id="footnoteList">
+            <!-- 자바스크립트로 생성되는 각주가 여기에 배치됩니다 -->
+        <li id="fn-1">전과 189범으로 감옥 한정 서버 1위 달성 <a href="#fnref-1" class="wiki-link" title="본문으로 이동">↩</a></li></ol>
+    </div>
+</div>
 
 <!-- 2. 문서 역사 뷰 컨테이너 (GitHub Commits 연동) -->
 <div class="container" id="historyContainer">
